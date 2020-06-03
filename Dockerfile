@@ -42,9 +42,9 @@ apt-get install -y libc6-dev
 RUN apt-get install -y unzip
 
 # Download/Install iSpy Agent DVR:
-RUN wget https://ispyfiles.azureedge.net/downloads/Agent_Linux64_2_7_5_0.zip && \
-unzip Agent_Linux64_2_7_5_0.zip -d /agent && \
-rm Agent_Linux64_2_7_5_0.zip
+RUN wget -c https://ispyfiles.azureedge.net/downloads/Agent_Linux64_2_7_6_0.zip -O ispy.zip && \
+unzip ispy.zip -d /agent && \
+rm ispy.zip
 
 # Main UI port
 EXPOSE 8090
@@ -52,4 +52,5 @@ EXPOSE 8090
 # Data volumes
 VOLUME ["/agent/Media/XML", "agent/Media/WebServerRoot/Media/audio", "agent/Media/WebServerRoot/Media/video"]
 
-CMD dotnet /agent/Agent.dll
+# Define service entrypoint
+ENTRYPOINT ["dotnet", "/agent/Agent.dll"]
