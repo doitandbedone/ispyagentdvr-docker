@@ -21,4 +21,5 @@ docker run -it --net=host -p 8090:8090 \
 -v /appdata/ispyagentdvr/video/:/agent/Media/WebServerRoot/Media/video/
 ```
 ## Known issues:
-This image can only be run on host network due to SSL validation. There's a brief explanation on the official website. You will see a warning about the port, left intentionally in command for informational purposes. Please email me if you find a workaround.
+This image can only be run on host network due to WebRTC's random port selection. You will see a warning about the port and host network, left intentionally in command for informational purposes. Please email me if you find a workaround. Issue: 
+https://github.com/doitandbedone/ispyagentdvr-docker/issues/1
