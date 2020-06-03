@@ -15,7 +15,7 @@ By default the container will use port 8090 for Web UI. To access the panel go t
 
 ## Example run:
 ```bash
-docker run --net=host -p 8090:8090 \
+docker run -it --net=host -p 8090:8090 \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
 -v /appdata/ispyagentdvr/audio/:/agent/Media/WebServerRoot/Media/audio/ \
 -v /appdata/ispyagentdvr/video/:/agent/Media/WebServerRoot/Media/video/
