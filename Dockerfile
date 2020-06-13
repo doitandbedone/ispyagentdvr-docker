@@ -50,7 +50,7 @@ rm ispy.zip
 EXPOSE 8090
 
 # Data volumes
-VOLUME ["/agent/Media/XML", "agent/Media/WebServerRoot/Media/audio", "agent/Media/WebServerRoot/Media/video"]
+VOLUME ["/agent/Media/XML", "/agent/Media/WebServerRoot/Media/audio", "/agent/Media/WebServerRoot/Media/video"]
 
 # Define service entrypoint
 ENTRYPOINT ["dotnet", "/agent/Agent.dll"]
