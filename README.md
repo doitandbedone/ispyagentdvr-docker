@@ -23,3 +23,6 @@ docker run -it --net=host -p 8090:8090 \
 ## Known issues:
 This image can only be run on host network due to WebRTC's random port selection. You will see a warning about the port and host network, left intentionally in command for informational purposes. Please email me if you find a workaround. Issue: 
 https://github.com/doitandbedone/ispyagentdvr-docker/issues/1
+
+## Forked from 
+https://github.com/doitandbedone
