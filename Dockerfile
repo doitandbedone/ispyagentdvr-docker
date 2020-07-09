@@ -41,10 +41,10 @@ apt-get install -y libc6-dev
 # Install unzip:
 RUN apt-get install -y unzip
 
-# Download/Install iSpy Agent DVR:
-RUN wget -c https://ispyfiles.azureedge.net/downloads/Agent_Linux64_2_8_0_0.zip -O ispy.zip && \
-unzip ispy.zip -d /agent && \
-rm ispy.zip
+# Download/Install iSpy Agent DVR (latest version):
+RUN wget -c $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux" | tr -d '"') -O agent.zip && \
+unzip agent.zip -d /agent && \
+rm agent.zip
 
 # Main UI port
 EXPOSE 8090
