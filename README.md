@@ -8,17 +8,20 @@ By default the container will use port 8090 for Web UI. To access the panel go t
 ### Volumes:
 #### Config: 
 /agent/Media/XML/
-#### Audio: 
-/agent/Media/WebServerRoot/Media/audio/
-#### Video: 
-/agent/Media/WebServerRoot/Media/video/
+#### Media: 
+/agent/Media/WebServerRoot/Media/
+
+#### Migration Notes: If you had the old format of audio and video volumes please move them within the new media folder before starting the container again.
+It would look something like this:
+mkdir /appdata/ispyagentdvr/media
+mv /apdata/ispyagentdvr/audio /appdata/ispyagentdvr/media
+mv /appdata/ispyagentdvr/video /appdata/ispyagentdvr/media
 
 ## Example run:
 ```bash
 docker run -it --net=host -p 8090:8090 \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
--v /appdata/ispyagentdvr/audio/:/agent/Media/WebServerRoot/Media/audio/ \
--v /appdata/ispyagentdvr/video/:/agent/Media/WebServerRoot/Media/video/
+-v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/
 ```
 ## Known issues:
 This image can only be run on host network due to WebRTC's random port selection. You will see a warning about the port and host network, left intentionally in command for informational purposes. Please email me if you find a workaround. Issue: 
