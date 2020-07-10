@@ -2,6 +2,9 @@ FROM phusion/baseimage:0.11
 
 LABEL maintainer="doitandbedone"
 
+# Use baseimage-docker's init system.
+CMD ["/sbin/my_init"]
+
 # Add universe repo
 RUN add-apt-repository universe \
   && apt-get update \
