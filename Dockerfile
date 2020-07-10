@@ -12,8 +12,13 @@ RUN add-apt-repository universe \
   # Install wget
   && apt-get install -y wget \
 
+  # Install .NET core:
+  # Add MS repo key and feed
+  && wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
+  && dpkg -i packages-microsoft-prod.deb \
+  
   # Install .NET Core SDK
-  && apt-transport-https \
+  && apt-get install -y apt-transport-https \
   && dotnet-sdk-3.1 \
 
   # Install ASP .NET Core runtime
@@ -29,11 +34,6 @@ RUN add-apt-repository universe \
 
   # Install unzip:
   && unzip \
-
-  # Install .NET core:
-  # Add MS repo key and feed
-  && wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
-  && dpkg -i packages-microsoft-prod.deb \
   
   # Download/Install iSpy Agent DVR (latest version):
   && wget -c $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux" | tr -d '"') -O agent.zip \
