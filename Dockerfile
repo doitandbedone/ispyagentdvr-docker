@@ -9,8 +9,8 @@ CMD ["/sbin/my_init"]
 RUN add-apt-repository universe \
   && apt-get update \
 
-  # Install wget
-  && apt-get install -y --no-install-recommends wget \
+  # Install wget and unzip:
+  && apt-get install -y --no-install-recommends wget unzip \
 
   # Install .NET core:
   # Add MS repo key and feed
@@ -41,13 +41,11 @@ RUN add-apt-repository universe \
   && apt-get install -y --no-install-recommends libtbb-dev \
   && apt-get install -y --no-install-recommends libc6-dev \
 
-  # Install unzip:
-  && apt-get install -y --no-install-recommends unzip \
-
   # Download/Install iSpy Agent DVR (latest version):
   && wget -c $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux" | tr -d '"') -O agent.zip \
   && unzip agent.zip -d /agent \
   && rm agent.zip \
+  && rm packages-microsoft-prod.deb \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
