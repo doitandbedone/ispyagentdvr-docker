@@ -44,7 +44,8 @@ RUN add-apt-repository universe \
   # Download/Install iSpy Agent DVR (latest version):
   && wget -c $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux" | tr -d '"') -O agent.zip \
   && unzip agent.zip -d /agent \
-  && rm agent.zip
+  && rm agent.zip \
+  && rm -rf /var/lib/apt/lists/*
 
 # Main UI port
 EXPOSE 8090
