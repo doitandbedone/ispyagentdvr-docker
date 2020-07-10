@@ -11,8 +11,6 @@ RUN add-apt-repository universe \
   
   # Install wget
   && apt-get install -y wget \
-  && apt-transport-https \
-  && apt-get update \
   
   # Install .NET core:
   # Add MS repo key and feed
@@ -20,6 +18,8 @@ RUN add-apt-repository universe \
   && dpkg -i packages-microsoft-prod.deb \
   
   # Install .NET Core SDK
+  && apt-get install -y apt-transport-https \
+  && apt-get update \
   && apt-get install -y dotnet-sdk-3.1 \
 
   # Install ASP .NET Core runtime
