@@ -45,7 +45,6 @@ RUN add-apt-repository universe \
   && wget -c $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux" | tr -d '"') -O agent.zip \
   && unzip agent.zip -d /agent \
   && rm agent.zip \
-  && rm packages-microsoft-prod.deb \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
