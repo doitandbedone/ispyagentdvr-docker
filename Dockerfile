@@ -11,16 +11,16 @@ RUN add-apt-repository universe \
   
   # Install wget
   && apt-get install -y wget \
-
+  && apt-transport-https \
+  && apt-get update \
+  
   # Install .NET core:
   # Add MS repo key and feed
   && wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
   && dpkg -i packages-microsoft-prod.deb \
   
   # Install .NET Core SDK
-  && apt-get update \
-  && apt-get install -y apt-transport-https \
-  && dotnet-sdk-3.1 \
+  && apt-get install -y dotnet-sdk-3.1 \
 
   # Install ASP .NET Core runtime
   && aspnetcore-runtime-3.1 \
