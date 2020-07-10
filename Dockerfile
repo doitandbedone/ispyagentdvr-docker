@@ -18,6 +18,7 @@ RUN add-apt-repository universe \
   && dpkg -i packages-microsoft-prod.deb \
   
   # Install .NET Core SDK
+  && apt-get update \
   && apt-get install -y apt-transport-https \
   && dotnet-sdk-3.1 \
 
