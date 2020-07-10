@@ -21,7 +21,8 @@ mv /appdata/ispyagentdvr/video /appdata/ispyagentdvr/media
 ```bash
 docker run -it --net=host -p 8090:8090 \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
--v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/
+-v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
+doitandbedone/ispyagentdvr:latest
 ```
 ## Known issues:
 This image can only be run on host network due to WebRTC's random port selection. You will see a warning about the port and host network, left intentionally in command for informational purposes. Please email me if you find a workaround. Issue: 
