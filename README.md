@@ -1,6 +1,6 @@
 # iSpy Agent DVR (Unofficial Image)
 This is an unofficial docker image of agent dvr from ispy created for convenience. The software creates a local server for IP cameras to be managed. For more information visit:
-https://www.ispyconnect.com/userguide-agent.aspx
+https://www.ispyconnect.com/userguide-agent-dvr.aspx
 
 ## Recommended settings:
 ### Port:
