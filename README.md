@@ -19,9 +19,6 @@ Ports used to create connections or WebRTC. These will be used as needed.
 #### Media: 
 /agent/Media/WebServerRoot/Media/
 
-## Non host network use:
-As of version 2.8.4.0 non host network is supported, for this to work, a turn server was included with the software. You will need to open up ports for this to porperly work, thus the UDP ports listed in the sample runs. To access go to the container's http://<container's ip>:<port> such as http://192.168.1.42:8090.
-
 #### Migration Notes: If you had the old format of audio and video volumes please move them within the new media folder before starting the container again.
 It would look something like this:
 mkdir /appdata/ispyagentdvr/media
@@ -65,3 +62,7 @@ docker run -it --net=host -p 8090:8090 -p 3478:3478/udp 50000-50010:50000-50010/
 doitandbedone/ispyagentdvr:2.7.6.0
 ```
 
+## Non host network use:
+As of version 2.8.4.0 non host network is supported, for this to work, a turn server was included with the software. You will need to open up ports for this to porperly work, thus the UDP ports listed in the sample runs. 
+
+To access UI panel go to the container's http://<container's ip>:<port> such as http://192.168.1.42:8090.
