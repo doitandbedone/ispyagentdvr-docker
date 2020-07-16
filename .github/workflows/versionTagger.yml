@@ -15,13 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get file name
-      run: echo ::set-env name=FILE_NAME::$(echo $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux" | tr -d '"'))
+        run: echo ::set-env name=FILE_NAME::$(echo $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux" | tr -d '"'))
       
       - name: Print FILE_NAME
-      run: echo ${{env.FILE_NAME}}
+        run: echo ${{env.FILE_NAME}}
 
       - name: Get version number
-      run: echo ::set-env name=VERSION::$(echo $FILE_NAME | grep -Po "(?<=Linux64_).*(?=.zip)" | tr _ .)
+        run: echo ::set-env name=VERSION::$(echo $FILE_NAME | grep -Po "(?<=Linux64_).*(?=.zip)" | tr _ .)
       
       - name: Print VERSION
-      run: echo ${{env.VERSION}}
+        run: echo ${{env.VERSION}}
