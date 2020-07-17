@@ -1,7 +1,6 @@
 name: Check for updates and tag
 on: 
   push:
-    
   #Manual dispatch trigger
   workflow_dispatch:
   #Remote github trigger
