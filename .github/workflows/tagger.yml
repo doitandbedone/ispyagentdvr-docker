@@ -40,7 +40,7 @@ jobs:
 
       - name: Compare versions
         if: ${{steps.lastTag.outputs.tag != env.VERSION}}
-        run: echo New tag ${{VERSION}} will be created
+        run: echo New tag ${{env.VERSION}} will be created
 
       - name: Tag new version
         if: ${{steps.lastTag.outputs.tag != env.VERSION}}
