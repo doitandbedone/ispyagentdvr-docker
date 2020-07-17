@@ -1,6 +1,8 @@
 name: Check for updates and tag
 on: 
   #Manual dispatch trigger
+  workflow_dispatch:
+  #Remote trigger
   repository_dispatch:
     types: execute
   #Run 3 times per day, evenly distributed
