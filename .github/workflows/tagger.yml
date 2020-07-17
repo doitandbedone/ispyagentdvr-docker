@@ -1,12 +1,14 @@
 name: Check for updates and tag
 on: 
+  push:
+    
   #Manual dispatch trigger
-    workflow_dispatch:
+  workflow_dispatch:
   #Remote github trigger
-    repository_dispatch:
-      types: execute
+  repository_dispatch:
+    types: execute
   #Run 3 times per day, evenly distributed
-    schedule:
+  schedule:
     - cron : '* */8 * * *'
       
 jobs:
