@@ -24,7 +24,7 @@ jobs:
         #{{ steps.lastTag.outputs.tag }} sample: ::set-output name=tag::1.1.0, this will get you 1.1.0
         uses: WyriHaximus/github-action-get-previous-tag@0.2.0
         env:
-          GITHUB_TOKEN: "${{secrets.PAT}}"
+          GITHUB_TOKEN: ${{secrets.PAT}}
 
       - name: Get file name
         run: echo ::set-env name=FILE_LOCATION::$(echo $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux" | tr -d '"'))
@@ -46,5 +46,5 @@ jobs:
         if: ${{steps.lastTag.outputs.tag != env.VERSION}}
         uses: tvdias/github-tagger@v0.0.2
         with:
-          repo-token: "${{secrets.PAT}}"
-          tag: "${{env.VERSION}}"
+          repo-token: ${{secrets.PAT}}
+          tag: ${{env.VERSION}}
