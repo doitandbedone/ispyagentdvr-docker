@@ -13,7 +13,7 @@ jobs:
   build:
     # Job name is Greeting
     name: Update iSpy Agent DVR
-    # This job runs on Linux
+    # This runs the job on ubuntu
     runs-on: ubuntu-latest
     steps:
       - name: Get file name
