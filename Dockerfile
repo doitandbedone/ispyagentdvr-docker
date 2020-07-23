@@ -38,6 +38,9 @@ apt-get install -y ffmpeg
 RUN apt-get install -y libtbb-dev && \
 apt-get install -y libc6-dev
 
+# Install gss-ntlmssp (for NTLM auth with SMTP)
+RUN apt-get install -y gss-ntlmssp
+
 # Install unzip:
 RUN apt-get install -y unzip
 
