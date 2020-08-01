@@ -43,8 +43,9 @@ jobs:
         run: echo New tag ${{env.VERSION}} will be created
 
       - name: Update Agent version in Dockerfile
+        id: update_dockerfile
         if: ${{steps.lastTag.outputs.tag != env.VERSION}}
-        uses: doitandbedone/dockerfile-updater@arg-update
+        uses: doitandbedone/dockerfile-updater@feature/output-sha-and-branch-name
         with:
           token: ${{secrets.PAT}}
           disable_pr: true
@@ -56,3 +57,4 @@ jobs:
         with:
           repo-token: ${{secrets.PAT}}
           tag: ${{env.VERSION}}
+          commit-sha: ${{steps.update_dockerfile.outputs.sha}}
