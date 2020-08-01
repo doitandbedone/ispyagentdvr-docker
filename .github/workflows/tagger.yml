@@ -21,7 +21,6 @@ jobs:
       - uses: actions/checkout@v1
       - name: Get previous tag
         id: lastTag
-        #{{ steps.lastTag.outputs.tag }} sample: ::set-output name=tag::1.1.0, this will get you 1.1.0
         uses: WyriHaximus/github-action-get-previous-tag@0.2.0
         env:
           GITHUB_TOKEN: ${{secrets.PAT}}
@@ -58,3 +57,9 @@ jobs:
           repo-token: ${{secrets.PAT}}
           tag: ${{env.VERSION}}
           commit-sha: ${{steps.update_dockerfile.outputs.sha}}
+      
+      - name: Delete branch
+        uses: doitandbedone/action-delete-branch@v3.0.2
+        with:
+          github_token: ${{secrets.PAT}}
+          branches: ${{steps.update_dockerfile.outputs.branch_name}}
