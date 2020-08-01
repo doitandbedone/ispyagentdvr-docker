@@ -9,7 +9,7 @@ on:
     types: execute
   #Run 3 times per day, evenly distributed
   schedule:
-    - cron: "* */8 * * *"
+    - cron: "0 */8 * * *"
 
 jobs:
   build:
@@ -47,7 +47,6 @@ jobs:
         uses: doitandbedone/dockerfile-updater@feature/output-sha-and-branch-name
         with:
           token: ${{secrets.PAT}}
-          disable_pr: true
           args: "FILE_LOCATION=\"${{env.FILE_LOCATION}}\""
 
       - name: Tag new version
@@ -57,9 +56,3 @@ jobs:
           repo-token: ${{secrets.PAT}}
           tag: ${{env.VERSION}}
           commit-sha: ${{steps.update_dockerfile.outputs.sha}}
-      
-      - name: Delete branch
-        uses: doitandbedone/action-delete-branch@v3.0.2
-        with:
-          github_token: ${{secrets.PAT}}
-          branches: ${{steps.update_dockerfile.outputs.branch_name}}
