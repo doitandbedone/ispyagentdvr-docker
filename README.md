@@ -25,60 +25,45 @@ mkdir /appdata/ispyagentdvr/media
 mv /apdata/ispyagentdvr/audio /appdata/ispyagentdvr/media
 mv /appdata/ispyagentdvr/video /appdata/ispyagentdvr/media
 
-## Example run:
+## Running Image :
 ```bash
 docker run -it --net=host -p 8090:8090 3478:3478/udp -p 50000-50010:50000-50010/udp \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
 -v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
-doitandbedone/ispyagentdvr
+--name ispyagentdvr doitandbedone/ispyagentdvr
 ```
+This will default to the latest. See Tags section for other versions.
 
-## Tags:
-### latest:
+### Tags:
+#### latest:
 This tag will give you the latest version of the build.
 ```bash
 docker run -it --net=host -p 8090:8090 3478:3478/udp -p 50000-50010:50000-50010/udp \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
 -v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
-doitandbedone/ispyagentdvr:latest
+--name ispyagentdvr doitandbedone/ispyagentdvr:latest
 ```
 
-### lite:
+#### lite:
 This will also give you a slighty smaller version of the latest build. This is under testing as it may remove some dependencies that may not be needed. If you encounter an issue, try a non lite version and see if there's any difference, otherwise, please report the issue.
 ```bash
 docker run -it --net=host -p 8090:8090 3478:3478/udp -p 50000-50010:50000-50010/udp \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
 -v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
-doitandbedone/ispyagentdvr:lite
+--name ispyagentdvr doitandbedone/ispyagentdvr:lite
 ```
 
-### Other versions:
+#### Other versions:
 Tags will also be created for older releases.
 For example, for version 2.7.6.0:
 ```bash
 docker run -it --net=host -p 8090:8090 -p 3478:3478/udp 50000-50010:50000-50010/udp \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
 -v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
-doitandbedone/ispyagentdvr:2.7.6.0
+--name ispyagentdvr doitandbedone/ispyagentdvr:2.7.6.0
 ```
 
 ## Non host network use:
 As of version 2.8.4.0 non host network is supported, for this to work, a turn server was included with the software. You will need to open up ports for this to porperly work, thus the UDP ports listed in the sample runs. 
 
 To access UI panel go to the container's http://<container's ip>:<port> such as http://192.168.1.42:8090.
-  
-## Known issues:
-There's a caching issue that may prevent agent from being updated after the first install. Strongly recommended to use --no-cache during manual building. For more details see https://github.com/doitandbedone/ispyagentdvr-docker/issues/17.
-
-For instance let's say you want to manually build and run the image:
-```bash
-git clone https://github.com/doitandbedone/ispyagentdvr-docker.git
-cd ispyagentdvr-docker
-docker build --no-cache -t ispyagentdvr .
-docker run -it --net=host -p 8090:8090 -p 3478:3478/udp 50000-50010:50000-50010/udp \
--v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
--v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
---name ispyagentdvr ispyagentdvr
-```
-
-Please note that if you are using Dockerhub this will not affect you as caching has been disabled as a temporary measure.
