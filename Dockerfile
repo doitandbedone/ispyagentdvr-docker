@@ -1,3 +1,7 @@
+#Define download location variables
+ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_2_8_6_0.zip"
+ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
+ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux"
 # Use MS maintained .net docker image wuith aspnet and core runtimes.
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 
@@ -11,10 +15,18 @@ RUN apt-get update \
     && rm libjpeg8_8c-2ubuntu8_amd64.deb \
     && rm libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb
 
-# Download/Install iSpy Agent DVR (latest version):
-RUN wget -c $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux" | tr -d '"') -O agent.zip \
-    && unzip agent.zip -d /agent \
-    && rm agent.zip
+# Download/Install iSpy Agent DVR: 
+# Check if we were given a specific version
+RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
+    echo "Downloading from specific location: ${FILE_LOCATION}" && \
+    wget -c ${FILE_LOCATION} -O agent.zip; \
+    else \
+    #Get latest instead
+    echo "Downloading latest" && \
+    wget -c $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux" | tr -d '"') -O agent.zip; \
+    fi && \
+    unzip agent.zip -d /agent && \
+    rm agent.zip
 
 # Clean up
 RUN apt-get -y --purge remove unzip wget \ 
