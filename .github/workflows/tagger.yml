@@ -2,6 +2,8 @@ name: Check for updates and tag
 on:
   #Push trigger
   push:
+    branches:
+      - master
   #Manual dispatch trigger
   workflow_dispatch:
   #Remote github trigger
