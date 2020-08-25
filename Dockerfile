@@ -1,9 +1,10 @@
+# Use MS maintained .net docker image wuith aspnet and core runtimes.
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+
 #Define download location variables
 ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_2_9_2_0.zip"
 ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
 ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux"
-# Use MS maintained .net docker image wuith aspnet and core runtimes.
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 
 # Download and install dependencies
 RUN apt-get update \
