@@ -89,7 +89,7 @@ docker exec -it ispyagentdvr /bin/bash
 ```
 Once in, run the following command:
 ```bash
-apt-get install -y libvlc-dev vlc libx11-dev
+apt-get update && apt-get install -y libvlc-dev vlc libx11-dev
 ```
 Once the installation is done, exit out of bash:
 ```bash
