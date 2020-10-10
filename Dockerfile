@@ -28,6 +28,9 @@ RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
     fi && \
     unzip agent.zip -d /agent && \
     rm agent.zip
+    
+# Install Time Zone
+RUN apt-get install -y tzdata
 
 # Clean up
 RUN apt-get -y --purge remove unzip wget \ 
