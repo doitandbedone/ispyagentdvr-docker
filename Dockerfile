@@ -43,6 +43,9 @@ RUN add-apt-repository ppa:jonathonf/ffmpeg-4 && \
 RUN apt-get install -y libtbb-dev && \
     apt-get install -y libc6-dev
 
+# Install Time Zone
+RUN apt-get install -y tzdata
+
 # Install gss-ntlmssp (for NTLM auth with SMTP)
 RUN apt-get install -y gss-ntlmssp
 
