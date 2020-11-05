@@ -45,7 +45,7 @@ docker run -it --net=host -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-500
 ```
 
 #### lite:
-This will also give you a slighty smaller version of the latest build. This is under testing as it may remove some dependencies that may not be needed. If you encounter an issue, try a non lite version and see if there's any difference, otherwise, please report the issue.
+This will also give you a slighty smaller version of the latest build. This is under testing as it may remove some dependencies that may not be needed. If you encounter an issue, try a non lite version and see if there's any difference, otherwise, please [report the issue](https://github.com/doitandbedone/ispyagentdvr-docker/issues/new?assignees=&labels=bug&template=bug_report.md).
 ```bash
 docker run -it --net=host -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
@@ -106,4 +106,11 @@ Please note that if you named your container differently you must use either the
 docker ps -a
 ```
 
+### Feedback:
+- [Report an issue](https://github.com/doitandbedone/ispyagentdvr-docker/issues/new?assignees=&labels=bug&template=bug_report.md)
+- [Request a feature](https://github.com/doitandbedone/ispyagentdvr-docker/issues/new?assignees=&labels=enhancement&template=feature_request.md)
+
+### Tips/Donations:
+- All tips/donations are welcomed: [![Paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ADN2P5FBEBMZ4&item_name=All+tips%2Fcontributions+are+welcomed+and+will+fuel+development%21&currency_code=USD)
+ 
 
