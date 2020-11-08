@@ -8,7 +8,7 @@ ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocatio
 
 # Download and install dependencies
 RUN apt-get update \
-    && apt-get install -y wget libtbb-dev libc6-dev unzip multiarch-support gss-ntlmssp \
+    && apt-get install -y git wget libtbb-dev libc6-dev unzip multiarch-support gss-ntlmssp \
     && wget http://security.ubuntu.com/ubuntu/pool/main/libj/libjpeg-turbo/libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb \
     && wget http://fr.archive.ubuntu.com/ubuntu/pool/main/libj/libjpeg8-empty/libjpeg8_8c-2ubuntu8_amd64.deb \
     && dpkg -i libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb \
