@@ -29,6 +29,9 @@ RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
     unzip agent.zip -d /agent && \
     rm agent.zip
     
+# Install libgdiplus, used for smart detection
+RUN apt-get install -y libgdiplus
+    
 # Install Time Zone
 RUN apt-get install -y tzdata
 
