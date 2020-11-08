@@ -8,13 +8,21 @@ ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocatio
 
 # Download and install dependencies
 RUN apt-get update \
-    && apt-get install -y wget ffmpeg libtbb-dev libc6-dev unzip multiarch-support gss-ntlmssp \
+    && apt-get install -y wget libtbb-dev libc6-dev unzip multiarch-support gss-ntlmssp \
     && wget http://security.ubuntu.com/ubuntu/pool/main/libj/libjpeg-turbo/libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb \
     && wget http://fr.archive.ubuntu.com/ubuntu/pool/main/libj/libjpeg8-empty/libjpeg8_8c-2ubuntu8_amd64.deb \
     && dpkg -i libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb \
     && dpkg -i libjpeg8_8c-2ubuntu8_amd64.deb \
     && rm libjpeg8_8c-2ubuntu8_amd64.deb \
     && rm libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb
+
+# Download, compile and install nvidia-ffmpeg
+RUN git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git && \
+    cd nv-codec-headers && sudo make install && cd – && \
+    apt-get install -y build-essential yasm cmake libtool libc6 libc6-dev libnuma1 libnuma-dev && \
+    git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg/ && \
+    ./configure --enable-nonfree -–enable-cuda-sdk –enable-libnpp --extra-cflags=-I/usr/local/cuda/include --extra-ldflags=-L/usr/local/cuda/lib64 && \
+    make -j 8 && make install
 
 # Download/Install iSpy Agent DVR: 
 # Check if we were given a specific version
