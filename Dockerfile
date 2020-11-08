@@ -18,7 +18,7 @@ RUN apt-get update \
 
 # Download, compile and install nvidia-ffmpeg
 RUN git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git && \
-    cd nv-codec-headers && sudo make install && cd – && \
+    cd nv-codec-headers && make install && cd – && \
     apt-get install -y build-essential yasm cmake libtool libc6 libc6-dev libnuma1 libnuma-dev && \
     git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg/ && \
     ./configure --enable-nonfree -–enable-cuda-sdk –enable-libnpp --extra-cflags=-I/usr/local/cuda/include --extra-ldflags=-L/usr/local/cuda/lib64 && \
