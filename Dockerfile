@@ -25,14 +25,10 @@ RUN apt-get install -y apt-transport-https && \
     apt-get install -y dotnet-sdk-3.1
 
 # Install ASP .NET Core runtime
-RUN apt-get install -y apt-transport-https && \
-    apt-get update && \
-    apt-get install -y aspnetcore-runtime-3.1
+RUN apt-get install -y aspnetcore-runtime-3.1
 
 # Install .NET Core runtime
-RUN apt-get install -y apt-transport-https && \
-    apt-get update && \
-    apt-get install -y dotnet-runtime-3.1
+RUN apt-get install -y dotnet-runtime-3.1
 
 # Install FFmpeg v4.x:
 RUN add-apt-repository ppa:jonathonf/ffmpeg-4 && \
@@ -42,6 +38,9 @@ RUN add-apt-repository ppa:jonathonf/ffmpeg-4 && \
 # Install libtbb and libc6 (Optional)
 RUN apt-get install -y libtbb-dev && \
     apt-get install -y libc6-dev
+
+# Install libgdiplus, used for smart detection
+RUN apt-get install -y libgdiplus
 
 # Install Time Zone
 RUN apt-get install -y tzdata
