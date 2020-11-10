@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.1-devel-ubuntu18.04
+FROM nvidia/cuda:11.1-base-ubuntu18.04
 
 LABEL maintainer="doitandbedone"
 
@@ -12,13 +12,13 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # Update and install dependencies
 RUN apt-get update && \
     apt-get install -y apt-transport-https && \
-    apt-get update && apt-get install -y wget git build-essential yasm pkg-config tzdata
+    apt-get update && apt-get install -y wget git build-essential yasm pkg-config tzdata software-properties-common
 
 
 # Setup .NET environment:
 # Add MS signing key
 RUN wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
-    dpkg -i packages-microsoft-prod.deb && rm packages-microsoft-prod.deb
+    dpkg -i packages-microsoft-prod.deb
 
 # Install .NET Core SDK
 RUN apt-get update && apt-get install -y dotnet-sdk-3.1
@@ -27,6 +27,8 @@ RUN apt-get update && apt-get install -y dotnet-sdk-3.1
 RUN apt-get install -y aspnetcore-runtime-3.1
 
 # Nvidia-ffmpeg installation:
+# Install jonathon's ffmpeg
+RUN add-apt-repository ppa:jonathonf/ffmpeg-4 && apt-get update
 # Install nvidia codec headers
 RUN git clone https://github.com/FFmpeg/nv-codec-headers /nv-codec-headers && \
   cd /nv-codec-headers &&\
@@ -39,7 +41,7 @@ RUN git clone https://git.ffmpeg.org/ffmpeg.git /ffmpeg && \
   cd /ffmpeg && ./configure \
   --enable-nonfree --disable-shared \
   --enable-nvenc --enable-cuda \
-  --enable-cuvid --enable-libnpp\
+  --enable-cuvid \
   --extra-cflags=-I/usr/local/cuda/include \
   --extra-cflags=-I/usr/local/include \
   --extra-ldflags=-L/usr/local/cuda/lib64 && \
