@@ -8,7 +8,7 @@ ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocatio
 
 # Download and install dependencies
 RUN apt-get update \
-    && apt-get install -y git wget libtbb-dev libc6-dev unzip multiarch-support gss-ntlmssp \
+    && apt-get install -y git wget build-essential software-properties-common libxml2 libtbb-dev unzip multiarch-support gss-ntlmssp \
     && wget http://security.ubuntu.com/ubuntu/pool/main/libj/libjpeg-turbo/libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb \
     && wget http://fr.archive.ubuntu.com/ubuntu/pool/main/libj/libjpeg8-empty/libjpeg8_8c-2ubuntu8_amd64.deb \
     && dpkg -i libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb \
@@ -16,15 +16,30 @@ RUN apt-get update \
     && rm libjpeg8_8c-2ubuntu8_amd64.deb \
     && rm libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb
 
-# Download, compile and install nvidia-ffmpeg
+# Nvidia ffmpeg installation:
+# Install dependencies
+RUN apt-get install -y yasm cmake libtool libnuma1 libnuma-dev
+# Install Nvidia CUDA
+RUN wget https://developer.download.nvidia.com/compute/cuda/11.1.1/local_installers/cuda-repo-debian10-11-1-local_11.1.1-455.32.00-1_amd64.deb && \
+    dpkg -i cuda-repo-debian10-11-1-local_11.1.1-455.32.00-1_amd64.deb && \
+    apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/debian10/x86_64/7fa2af80.pub && \
+    add-apt-repository contrib && \
+    apt-get update && \
+    apt-get -y install cuda --silent
+# Environments setup
+ENV PATH=$PATH:/usr/local/cuda/bin
+ENV CUDADIR=/usr/local/cuda
+ENV PATH=$PATH:/usr/local/cuda-11.1/bin
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-11.1//lib64
+# Install Nvidia Codec Headers
 RUN git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git && \
-    cd nv-codec-headers && make install && cd – && \
-    apt-get install -y build-essential yasm cmake libtool libc6 libc6-dev libnuma1 libnuma-dev && \
-    git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg/ && \
-    ./configure --enable-nonfree -–enable-cuda-sdk –enable-libnpp --extra-cflags=-I/usr/local/cuda/include --extra-ldflags=-L/usr/local/cuda/lib64 && \
-    make -j 8 && make install
+    cd nv-codec-headers && make install && cd -
+# Download, compile and install ffmpeg with Nvidia hardware accelaration
+RUN git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg/ && \
+    ./configure --enable-cuda --enable-cuvid --enable-nvenc --enable-nonfree --enable-libnpp --extra-cflags=-I/usr/local/cuda/include  --extra-ldflags=-L/usr/local/cuda/lib64 && \
+    make -j -s
 
-# Download/Install iSpy Agent DVR: 
+# Download/Install iSpy Agent DVR:
 # Check if we were given a specific version
 RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
     echo "Downloading from specific location: ${FILE_LOCATION}" && \
