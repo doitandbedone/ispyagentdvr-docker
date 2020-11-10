@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.1-base-ubuntu18.04
+FROM nvidia/cuda:11.1-devel-ubuntu18.04
 
 LABEL maintainer="doitandbedone"
 
@@ -7,6 +7,7 @@ ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_3_0_0
 ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
 ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux"
 ENV TZ=America/Los_Angeles
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Update and install dependencies
 RUN apt-get update && \
@@ -38,7 +39,7 @@ RUN git clone https://git.ffmpeg.org/ffmpeg.git /ffmpeg && \
   cd /ffmpeg && ./configure \
   --enable-nonfree --disable-shared \
   --enable-nvenc --enable-cuda \
-  --enable-cuvid \
+  --enable-cuvid --enable-libnpp\
   --extra-cflags=-I/usr/local/cuda/include \
   --extra-cflags=-I/usr/local/include \
   --extra-ldflags=-L/usr/local/cuda/lib64 && \
