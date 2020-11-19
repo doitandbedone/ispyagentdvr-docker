@@ -44,15 +44,6 @@ docker run -it --net=host -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-500
 --name ispyagentdvr doitandbedone/ispyagentdvr:latest
 ```
 
-#### lite:
-This will also give you a slighty smaller version of the latest build. This is under testing as it may remove some dependencies that may not be needed. If you encounter an issue, try a non lite version and see if there's any difference, otherwise, please [report the issue](https://github.com/doitandbedone/ispyagentdvr-docker/issues/new?assignees=&labels=bug&template=bug_report.md).
-```bash
-docker run -it --net=host -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp \
--v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
--v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
---name ispyagentdvr doitandbedone/ispyagentdvr:lite
-```
-
 #### Other versions:
 Tags will also be created for older releases.
 For example, for version 2.7.6.0:
