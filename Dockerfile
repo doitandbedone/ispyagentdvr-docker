@@ -28,7 +28,8 @@ RUN apt-get install -y aspnetcore-runtime-3.1
 
 # Nvidia-ffmpeg installation:
 # Install jonathon's ffmpeg
-RUN add-apt-repository ppa:jonathonf/ffmpeg-4 && apt-get update
+RUN add-apt-repository ppa:jonathonf/ffmpeg-4 && apt-get update && \
+  apt-get install -y ffmpeg
 # Install nvidia codec headers
 RUN git clone https://github.com/FFmpeg/nv-codec-headers /nv-codec-headers && \
   cd /nv-codec-headers &&\
