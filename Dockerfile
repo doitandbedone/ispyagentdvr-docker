@@ -2,19 +2,23 @@
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 
 #Define download location variables
-ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_3_0_0_0.zip"
+ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_3_0_2_0.zip"
 ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
 ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux"
 
 # Download and install dependencies
 RUN apt-get update \
-    && apt-get install -y wget ffmpeg libtbb-dev libc6-dev unzip multiarch-support gss-ntlmssp \
+    && apt-get install -y wget libtbb-dev libc6-dev unzip multiarch-support gss-ntlmssp \
     && wget http://security.ubuntu.com/ubuntu/pool/main/libj/libjpeg-turbo/libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb \
     && wget http://fr.archive.ubuntu.com/ubuntu/pool/main/libj/libjpeg8-empty/libjpeg8_8c-2ubuntu8_amd64.deb \
     && dpkg -i libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb \
     && dpkg -i libjpeg8_8c-2ubuntu8_amd64.deb \
     && rm libjpeg8_8c-2ubuntu8_amd64.deb \
     && rm libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb
+
+# Install jonathon's ffmpeg
+RUN add-apt-repository -y ppa:jonathonf/ffmpeg-4 && \
+apt-get update && apt-get install -y ffmpeg
 
 # Download/Install iSpy Agent DVR: 
 # Check if we were given a specific version
