@@ -6,8 +6,8 @@ LABEL maintainer="doitandbedone"
 ARG FILE_LOCATION="https://ispyrtcdata.blob.core.windows.net/downloads/Agent_Linux64_H264.zip"
 ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
 ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux"
-ENV TZ=America/Los_Angeles
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+ARG DEBIAN_FRONTEND=noninteractive
+ARG TZ=America/Los_Angeles
 
 # Update and install dependencies
 RUN apt-get update && \
@@ -27,7 +27,7 @@ RUN apt-get update && apt-get install -y dotnet-sdk-3.1
 RUN apt-get install -y aspnetcore-runtime-3.1
 
 # Nvidia-ffmpeg installation:
-# Install jonathon's ffmpeg
+# Install savoury1's ffmpeg
 RUN add-apt-repository ppa:savoury1/ffmpeg4 && apt-get update && \
   apt-get install -y ffmpeg
 
