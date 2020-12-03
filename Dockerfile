@@ -16,6 +16,9 @@ RUN apt-get update \
     && rm libjpeg8_8c-2ubuntu8_amd64.deb \
     && rm libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb
 
+# VLC support
+RUN apt-get install -y libvlc-dev vlc libx11-dev
+
 # Install jonathon's ffmpeg
 RUN add-apt-repository -y ppa:jonathonf/ffmpeg-4 && \
 apt-get update && apt-get install -y ffmpeg
