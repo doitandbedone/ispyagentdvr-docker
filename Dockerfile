@@ -28,7 +28,8 @@ RUN apt-get install -y aspnetcore-runtime-3.1
 
 # Nvidia-ffmpeg installation:
 # Install jonathon's ffmpeg
-RUN add-apt-repository ppa:jonathonf/ffmpeg-4 && apt-get update
+RUN add-apt-repository -y ppa:jonathonf/ffmpeg-4 && \
+    apt-get update && apt-get install -y ffmpeg
 
 # Install libtbb and libc6 (Optional)
 RUN apt-get install -y libtbb-dev libc6-dev
