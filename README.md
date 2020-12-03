@@ -58,19 +58,13 @@ docker run -it --net=host -p 8090:8090 -p 3478:3478/udp 50000-50010:50000-50010/
 As of version 2.8.4.0 non host network is supported, for this to work, a turn server was included with the software. You will need to open up ports for this to porperly work, thus the UDP ports listed in the sample runs. 
 
 To access UI panel go to the container's http://<container's ip>:<port> such as http://192.168.1.42:8090.
-  
 ## VLC Support:
-To enable VLC support, the following packages need to be installed:
-- libvlc-dev
-- vlc
-- libx11-dev
-
-### First time installation:
+Please use tag vlc:
 ```bash
 docker run -it --net=host -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
 -v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
---name ispyagentdvr doitandbedone/ispyagentdvr:latest /bin/bash -c "apt-get install -y libvlc-dev vlc libx11-dev && dotnet /agent/Agent.dll"
+--name ispyagentdvr doitandbedone/ispyagentdvr:vlc
 ```
 
 ### Upgrade existing setup:
