@@ -1,4 +1,4 @@
-FROM nvidia/cuda:10.2-base-ubuntu18.04
+FROM nvidia/cuda:11.1-base-ubuntu20.04
 
 LABEL maintainer="doitandbedone"
 
@@ -28,8 +28,8 @@ RUN apt-get install -y aspnetcore-runtime-3.1
 
 # Nvidia-ffmpeg installation:
 # Install jonathon's ffmpeg
-RUN add-apt-repository -y ppa:jonathonf/ffmpeg-4 && \
-    apt-get update && apt-get install -y ffmpeg
+RUN add-apt-repository ppa:savoury1/ffmpeg4 && apt-get update && \
+  apt-get install -y ffmpeg
 
 # Install libtbb and libc6 (Optional)
 RUN apt-get install -y libtbb-dev libc6-dev
