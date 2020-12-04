@@ -1,85 +1,41 @@
-FROM nvidia/cuda:11.1-base-ubuntu18.04
-
-LABEL maintainer="doitandbedone"
+# Use MS maintained .net docker image wuith aspnet and core runtimes.
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.10-bionic
 
 #Define download location variables
 ARG FILE_LOCATION="https://ispyrtcdata.blob.core.windows.net/downloads/Agent_Linux64.zip"
 ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
 ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux"
+ARG DEBIAN_FRONTEND=noninteractive 
 ARG TZ=America/Los_Angeles
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+    
 
-# Update and install dependencies
-RUN apt-get update && \
-    apt-get install -y apt-transport-https && \
-    apt-get update && apt-get install -y wget git build-essential yasm pkg-config tzdata software-properties-common
+# Download and install dependencies
+RUN apt-get update \
+    && apt-get install -y wget libtbb-dev libc6-dev unzip multiarch-support gss-ntlmssp software-properties-common \
+    #&& apt-get install -y make git wget build-essential software-properties-common libxml2 libtbb-dev unzip multiarch-support gss-ntlmssp \
+    && wget http://security.ubuntu.com/ubuntu/pool/main/libj/libjpeg-turbo/libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb \
+    && wget http://fr.archive.ubuntu.com/ubuntu/pool/main/libj/libjpeg8-empty/libjpeg8_8c-2ubuntu8_amd64.deb \
+    && dpkg -i libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb \
+    && dpkg -i libjpeg8_8c-2ubuntu8_amd64.deb \
+    && rm libjpeg8_8c-2ubuntu8_amd64.deb \
+    && rm libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb
 
+# Prepare nvidia runtime
+RUN curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | apt-key add - &&\
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID) && \
+curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | \
+tee /etc/apt/sources.list.d/nvidia-container-runtime.list && \
+apt-get update && apt-get install -y nvidia-container-runtime
 
-# Setup .NET environment:
-# Add MS signing key
-RUN wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
-    dpkg -i packages-microsoft-prod.deb
+# Download/Install Nvidia codec headers
+# RUN git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git && \
+#     cd nv-codec-headers && make install
+  
+# ffmpeg ppa
+RUN add-apt-repository -y ppa:jonathonf/ffmpeg-4 && \
+apt-get update && apt-get install -y ffmpeg
 
-# Install .NET Core SDK
-RUN apt-get update && apt-get install -y dotnet-sdk-3.1
-
-# Install ASP .NET Core runtime
-RUN apt-get install -y aspnetcore-runtime-3.1
-
-# Nvidia-ffmpeg installation:
-# Install jonathon's ffmpeg
-RUN add-apt-repository ppa:jonathonf/ffmpeg-4 && apt-get update
-# Install nvidia codec headers
-RUN git clone https://github.com/FFmpeg/nv-codec-headers /nv-codec-headers && \
-  cd /nv-codec-headers &&\
-  make -j8 && \
-  make install -j8 && \
-  rm -rf nv-codec-headers
-
-# Compile and install ffmpeg from source
-RUN git clone https://git.ffmpeg.org/ffmpeg.git /ffmpeg && \
-  cd /ffmpeg && ./configure \
-  --enable-nonfree --disable-shared \
-  --enable-nvenc --enable-cuda \
-  --enable-cuvid \
-  --extra-cflags=-I/usr/local/cuda/include \
-  --extra-cflags=-I/usr/local/include \
-  --extra-ldflags=-L/usr/local/cuda/lib64 \
-  --prefix=/usr --extra-version='1~deb10u1' \
-  --toolchain=hardened --libdir=/usr/lib/x86_64-linux-gnu \
-  --incdir=/usr/include/x86_64-linux-gnu --arch=amd64 --enable-gpl \
-  --disable-stripping --enable-avresample --disable-filter=resample \
-  --enable-avisynth --enable-gnutls --enable-ladspa --enable-libaom \
-  --enable-libass --enable-libbluray --enable-libbs2b --enable-libcaca \
-  --enable-libcdio --enable-libcodec2 --enable-libflite --enable-libfontconfig \
-  --enable-libfreetype --enable-libfribidi --enable-libgme --enable-libgsm \
-  --enable-libjack --enable-libmp3lame --enable-libmysofa --enable-libopenjpeg \
-  --enable-libopenmpt --enable-libopus --enable-libpulse --enable-librsvg \
-  --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr \
-  --enable-libspeex --enable-libssh --enable-libtheora --enable-libtwolame \
-  --enable-libvidstab --enable-libvorbis --enable-libvpx --enable-libwavpack \
-  --enable-libwebp --enable-libx265 --enable-libxml2 --enable-libxvid \
-  --enable-libzmq --enable-libzvbi --enable-lv2 --enable-omx --enable-openal \
-  --enable-opengl --enable-sdl2 --enable-libdc1394 --enable-libdrm \
-  --enable-libiec61883 --enable-chromaprint --enable-frei0r \
-  --enable-libx264 --enable-shared && \
-  make -j8 && \
-  make install -j8 && \
-  rm -rf ffmpeg
-
-# Install libtbb and libc6 (Optional)
-RUN apt-get install -y libtbb-dev libc6-dev
-
-# Install libgdiplus, used for smart detection
-RUN apt-get install -y libgdiplus
-
-# Install gss-ntlmssp (for NTLM auth with SMTP)
-RUN apt-get install -y gss-ntlmssp
-
-# Install unzip:
-RUN apt-get install -y unzip
-
-# Download/Install iSpy Agent DVR: 
+# Download/Install iSpy Agent DVR:
 # Check if we were given a specific version
 RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
     echo "Downloading from specific location: ${FILE_LOCATION}" && \
