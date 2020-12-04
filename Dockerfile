@@ -1,14 +1,17 @@
 # Use MS maintained .net docker image wuith aspnet and core runtimes.
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.10-bionic
 
 #Define download location variables
-ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_3_0_0_0.zip"
+ARG FILE_LOCATION="https://ispyrtcdata.blob.core.windows.net/downloads/Agent_Linux64_H264.zip"
 ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
 ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux"
+ARG DEBIAN_FRONTEND=noninteractive 
+ARG TZ=America/Los_Angeles
+    
 
 # Download and install dependencies
 RUN apt-get update \
-    && apt-get install -y git wget build-essential software-properties-common libxml2 libtbb-dev unzip multiarch-support gss-ntlmssp \
+    && apt-get install -y make git wget build-essential software-properties-common libxml2 libtbb-dev unzip multiarch-support gss-ntlmssp \
     && wget http://security.ubuntu.com/ubuntu/pool/main/libj/libjpeg-turbo/libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb \
     && wget http://fr.archive.ubuntu.com/ubuntu/pool/main/libj/libjpeg8-empty/libjpeg8_8c-2ubuntu8_amd64.deb \
     && dpkg -i libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb \
@@ -16,28 +19,65 @@ RUN apt-get update \
     && rm libjpeg8_8c-2ubuntu8_amd64.deb \
     && rm libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb
 
-# Nvidia ffmpeg installation:
-# Install dependencies
-RUN apt-get install -y yasm cmake libtool libnuma1 libnuma-dev
-# Install Nvidia CUDA
-RUN wget https://developer.download.nvidia.com/compute/cuda/11.1.1/local_installers/cuda-repo-debian10-11-1-local_11.1.1-455.32.00-1_amd64.deb && \
-    dpkg -i cuda-repo-debian10-11-1-local_11.1.1-455.32.00-1_amd64.deb && \
-    apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/debian10/x86_64/7fa2af80.pub && \
-    add-apt-repository contrib && \
-    apt-get update && \
-    apt-get -y install cuda --silent
-# Environments setup
-ENV PATH=$PATH:/usr/local/cuda/bin
-ENV CUDADIR=/usr/local/cuda
-ENV PATH=$PATH:/usr/local/cuda-11.1/bin
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-11.1//lib64
-# Install Nvidia Codec Headers
+# Prepare nvidia runtime
+RUN curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | apt-key add - &&\
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID) && \
+curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | \
+tee /etc/apt/sources.list.d/nvidia-container-runtime.list && \
+apt-get update && apt-get install -y nvidia-container-runtime
+  
+
+# ffmpeg dependencies
+RUN apt-get update -qq && apt-get -y install \
+  autoconf \
+  automake \
+  build-essential \
+  cmake \
+  git-core \
+  libass-dev \
+  libfreetype6-dev \
+  libgnutls28-dev \
+  libsdl2-dev \
+  libtool \
+  libva-dev \
+  libvdpau-dev \
+  libvorbis-dev \
+  libxcb1-dev \
+  libxcb-shm0-dev \
+  libxcb-xfixes0-dev \
+  pkg-config \
+  texinfo \
+  yasm \
+  zlib1g-dev
+  
+# ffmpeg ppa
+RUN add-apt-repository ppa:jonathonf/ffmpeg-4 && \
+apt-get update && apt-get install -y ffmpeg
+
+# Download/Install Nvidia codec headers
 RUN git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git && \
-    cd nv-codec-headers && make install && cd -
+    cd nv-codec-headers && make install
+
 # Download, compile and install ffmpeg with Nvidia hardware accelaration
-RUN git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg/ && \
-    ./configure --enable-cuda --enable-cuvid --enable-nvenc --enable-nonfree --enable-libnpp --extra-cflags=-I/usr/local/cuda/include  --extra-ldflags=-L/usr/local/cuda/lib64 && \
-    make -j -s
+RUN wget http://ffmpeg.org/releases/ffmpeg-4.3.1.tar.xz && \
+    tar -xf ffmpeg-4.3.1.tar.xz && rm ffmpeg-4.3.1.tar.xz
+RUN ls -la /usr/lib/x86_64-linux-gnu
+RUN cd ffmpeg-4.3.1/ && \
+    ./configure \
+    --prefix=/usr --extra-version='0york0~18.04' --toolchain=hardened --libdir=/usr/lib/x86_64-linux-gnu \
+    --incdir=/usr/include/x86_64-linux-gnu --arch=amd64 --enable-cuda --enable-cuvid --enable-nvenc && \
+    --enable-gpl --disable-stripping --enable-avresample --disable-filter=resample --enable-gnutls --enable-ladspa \
+    --enable-libaom --enable-libass --enable-libbluray \
+    --enable-libbs2b --enable-libcaca --enable-libcdio --enable-libcodec2 --enable-libflite --enable-libfontconfig \
+    --enable-libfreetype --enable-libfribidi --enable-libgme --enable-libgsm --enable-libjack --enable-libmp3lame \
+    --enable-libmysofa --enable-libopenjpeg --enable-libopenmpt --enable-libopus --enable-libpulse --enable-librabbitmq \
+    --enable-librsvg --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex \
+    --enable-libsrt --enable-libssh --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvorbis \
+    --enable-libvpx --enable-libwebp --enable-libx265 --enable-libxml2 --enable-libxvid \
+    --enable-libzmq --enable-libzvbi --enable-lv2 --enable-omx --enable-openal --enable-opencl --enable-opengl \
+    --enable-sdl2 --enable-libzimg --enable-pocketsphinx --enable-libdc1394 --enable-libdrm --enable-libiec61883 \
+    --enable-chromaprint --enable-frei0r --enable-libx264 --enable-shared --docdir=/usr/share/doc/ffmpeg-4.3.1 && \
+    make && gcc tools/qt-faststart.c -o tools/qt-faststart
 
 # Download/Install iSpy Agent DVR:
 # Check if we were given a specific version
