@@ -28,13 +28,13 @@ jobs:
           GITHUB_TOKEN: ${{secrets.PAT}}
 
       - name: Get file name
-        run: echo ::set-env name=FILE_LOCATION::$(echo $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux" | tr -d '"'))
+        run: echo FILE_LOCATION=$(echo $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux" | tr -d '"')) >> $GITHUB_ENV
 
       - name: Print FILE_LOCATION
         run: echo ${{env.FILE_LOCATION}}
 
       - name: Get version number
-        run: echo ::set-env name=VERSION::$(echo $FILE_LOCATION | grep -Po "(?<=Linux64_).*(?=.zip)" | tr _ .)
+        run: echo VERSION=$(echo $FILE_LOCATION | grep -Po "(?<=Linux64_).*(?=.zip)" | tr _ .) >> $GITHUB_ENV
 
       - name: Print VERSION
         run: echo ${{env.VERSION}}
