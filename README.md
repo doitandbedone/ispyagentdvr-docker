@@ -18,6 +18,8 @@ Ports used to create connections or WebRTC. These will be used as needed.
 /agent/Media/XML/
 #### Media: 
 /agent/Media/WebServerRoot/Media/
+#### Commands:
+/agent/Commands
 
 #### Migration Notes: If you had the old format of audio and video volumes please move them within the new media folder before starting the container again.
 It would look something like this:
@@ -30,6 +32,7 @@ mv /appdata/ispyagentdvr/video /appdata/ispyagentdvr/media
 docker run -it --net=host -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
 -v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
+-v /appdata/ispyagentdvr/commands:/agent/Commands/ \
 --name ispyagentdvr doitandbedone/ispyagentdvr
 ```
 This will default to the latest. See Tags section for other versions.
@@ -41,6 +44,7 @@ This tag will give you the latest version of the build.
 docker run -it --net=host -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
 -v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
+-v /appdata/ispyagentdvr/commands:/agent/Commands/ \
 --name ispyagentdvr doitandbedone/ispyagentdvr:latest
 ```
 
@@ -51,6 +55,7 @@ For example, for version 2.7.6.0:
 docker run -it --net=host -p 8090:8090 -p 3478:3478/udp 50000-50010:50000-50010/udp \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
 -v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
+-v /appdata/ispyagentdvr/commands:/agent/Commands/ \
 --name ispyagentdvr doitandbedone/ispyagentdvr:2.7.6.0
 ```
 
@@ -64,6 +69,7 @@ Please use tag vlc:
 docker run -it --net=host -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
 -v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
+-v /appdata/ispyagentdvr/commands:/agent/Commands/ \
 --name ispyagentdvr doitandbedone/ispyagentdvr:vlc
 ```
 
