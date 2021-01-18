@@ -99,8 +99,10 @@ docker ps -a
 Also note if you remove the container you will have to do this again. Reason why we recommend using vlc tag instead.
 
 ### Feedback:
+- [Ask a question](https://github.com/doitandbedone/ispyagentdvr-docker/discussions/146)
 - [Report an issue](https://github.com/doitandbedone/ispyagentdvr-docker/issues/new?assignees=&labels=bug&template=bug_report.md)
 - [Request a feature](https://github.com/doitandbedone/ispyagentdvr-docker/issues/new?assignees=&labels=enhancement&template=feature_request.md)
+- [Join our discussions](https://github.com/doitandbedone/ispyagentdvr-docker/discussions)
 
 ### Tips/Donations:
 - All tips/donations are welcomed: [![Paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ADN2P5FBEBMZ4&item_name=All+tips%2Fcontributions+are+welcomed+and+will+fuel+development%21&currency_code=USD)
