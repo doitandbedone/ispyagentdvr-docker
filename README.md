@@ -8,7 +8,7 @@ https://www.ispyconnect.com/userguide-agent-dvr.aspx
 By default the container will use port 8090 for Web UI. To access the panel go to http://localhost:8090 or replace localhost with your local IP.
 
 #### 3478
-Main port used for turn server communication.
+Main port used for TURN server communication.
 
 #### 50000-50010
 Ports used to create connections or WebRTC. These will be used as needed.
@@ -29,7 +29,7 @@ mv /appdata/ispyagentdvr/video /appdata/ispyagentdvr/media
 
 ## Running Image :
 ```bash
-docker run -it --net=host -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp \
+docker run -it -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
 -v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
 -v /appdata/ispyagentdvr/commands:/agent/Commands/ \
@@ -41,7 +41,7 @@ This will default to the latest. See Tags section for other versions.
 #### latest:
 This tag will give you the latest version of the build.
 ```bash
-docker run -it --net=host -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp \
+docker run -it -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
 -v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
 -v /appdata/ispyagentdvr/commands:/agent/Commands/ \
@@ -52,7 +52,7 @@ docker run -it --net=host -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-500
 Tags will also be created for older releases.
 For example, for version 2.7.6.0:
 ```bash
-docker run -it --net=host -p 8090:8090 -p 3478:3478/udp 50000-50010:50000-50010/udp \
+docker run -it -p 8090:8090 -p 3478:3478/udp 50000-50010:50000-50010/udp \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
 -v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
 -v /appdata/ispyagentdvr/commands:/agent/Commands/ \
@@ -66,7 +66,7 @@ To access UI panel go to the container's http://<container's ip>:<port> such as 
 ## VLC Support:
 Please use tag vlc:
 ```bash
-docker run -it --net=host -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp \
+docker run -it -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
 -v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
 -v /appdata/ispyagentdvr/commands:/agent/Commands/ \
@@ -96,6 +96,7 @@ Please note that if you named your container differently you must use either the
 ```bash
 docker ps -a
 ```
+Also note if you remove the container you will have to do this again. Reason why we recommend using vlc tag instead.
 
 ### Feedback:
 - [Report an issue](https://github.com/doitandbedone/ispyagentdvr-docker/issues/new?assignees=&labels=bug&template=bug_report.md)
