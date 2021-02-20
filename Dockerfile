@@ -1,23 +1,48 @@
+ARG TARGETARCH
+ARG TARGETVARIANT
 # Use MS maintained .net docker image wuith aspnet and core runtimes.
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-bionic-arm64v8
+# Support for 3.1-bionic-arm32v7, 3.1-bionic-arm64v8, 3.1-bionic
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-bionic${TARGETARCH:+-$TARGETARCH$TARGETVARIANT}
+
+
+# Set dynamic environment variables based on arch
+ENV IS_ARM=false
+ENV IS_64=true
+ENV ARCH_VAL=Linux64
+RUN if [[ "${TARGETARCH}" =~ .*"arm32".* ]]; then \
+        echo IS_ARM=true; \
+        echo IS_64=false; \
+        echo ARCH_VAL=ARM32; \
+    elif [[ "${TARGETARCH}" =~ .*"arm64".* ]]; then \
+        echo IS_ARM=true; \
+        echo ARCH_VAL=ARM64; \
+    fi
+# Print Arch. Options: ARM32, ARM64, Linux64
+RUN echo ${ARCH_VAL}
 
 #Define download location variables
-ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_ARM32_3_0_8_0.zip"
+ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_${ARCH_VAL}_3_1_8_0.zip"
 ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
-ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux"
-ARG DEBIAN_FRONTEND=noninteractive 
+
+# Defaulting location in case of errors; forcing 64 bit within the platform
+ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=false&platform=${ARCH_VAL}"
+ARG DEBIAN_FRONTEND=noninteractive
 ARG TZ=America/Los_Angeles
     
 
 # Download and install dependencies
 RUN apt-get update \
     && apt-get install -y wget libtbb-dev libc6-dev unzip multiarch-support gss-ntlmssp software-properties-common
-    #&& wget http://security.ubuntu.com/ubuntu/pool/main/libj/libjpeg-turbo/libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_arm64.deb \
-    #&& wget http://fr.archive.ubuntu.com/ubuntu/pool/main/libj/libjpeg8-empty/libjpeg8_8c-2ubuntu8_arm64.deb \
-    #&& dpkg -i libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_arm64.deb \
-    #&& dpkg -i libjpeg8_8c-2ubuntu8_arm64.deb \
-    #&& rm libjpeg8_8c-2ubuntu8_arm64.deb \
-    #&& rm libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_arm64.deb
+
+# Extra dependencies based on architecture
+RUN if [ "${ARCH_VAL}" = "Linux64" ]; then \
+        wget http://security.ubuntu.com/ubuntu/pool/main/libj/libjpeg-turbo/libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb \
+        && wget http://fr.archive.ubuntu.com/ubuntu/pool/main/libj/libjpeg8-empty/libjpeg8_8c-2ubuntu8_amd64.deb \
+        && dpkg -i libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb \
+        && dpkg -i libjpeg8_8c-2ubuntu8_amd64.deb \
+        && rm libjpeg8_8c-2ubuntu8_amd64.deb \
+        && rm libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb; \
+    fi
 
 
 # Install jonathon's ffmpeg
@@ -27,12 +52,12 @@ RUN add-apt-repository -y ppa:jonathonf/ffmpeg-4 && \
 # Download/Install iSpy Agent DVR: 
 # Check if we were given a specific version
 RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
-    echo "Downloading from specific location: ${FILE_LOCATION}" && \
-    wget -c ${FILE_LOCATION} -O agent.zip; \
+        echo "Downloading from specific location: ${FILE_LOCATION}" && \
+        wget -c ${FILE_LOCATION} -O agent.zip; \
     else \
-    #Get latest instead
-    echo "Downloading latest" && \
-    wget -c $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux" | tr -d '"') -O agent.zip; \
+        #Get latest instead
+        echo "Downloading latest" && \
+        wget -c $(wget -qO- ${DEFAULT_FILE_LOCATION} | tr -d '"') -O agent.zip; \
     fi && \
     unzip agent.zip -d /agent && \
     rm agent.zip
