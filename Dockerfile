@@ -9,7 +9,8 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-bionic${TARGETARCH:+-$TARGETARCH$T
 ENV IS_ARM=false
 ENV IS_64=true
 ENV ARCH_VAL=Linux64
-RUN if [[ "${TARGETARCH}" =~ .*"arm32".* ]]; then \
+RUN #!/bin/bash \
+    if [[ "${TARGETARCH}" =~ .*"arm32".* ]]; then \
         echo IS_ARM=true; \
         echo IS_64=false; \
         echo ARCH_VAL=ARM32; \
