@@ -1,4 +1,4 @@
-name: Check for updates and tag
+name: Create pull requests from master
 on:
   #Push trigger
   push:
@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Creates pull requests
-      - run: |
+        run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           hub pull-request -m "Merge from master" -b doitandbedone:master -h doitandbedone:vlc-support
