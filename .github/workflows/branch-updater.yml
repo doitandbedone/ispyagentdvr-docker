@@ -1,0 +1,28 @@
+name: Create pull requests from master
+on:
+  #Push trigger
+  push:
+    branches:
+      - master
+  #Manual dispatch trigger
+  workflow_dispatch:
+  #Remote github trigger
+  repository_dispatch:
+    types: execute
+
+jobs:
+  build:
+    # Job name is Greeting
+    name: Create Pull Requests
+    # This runs the job on ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Creates pull requests
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          hub pull-request -m "Merge from master" -h doitandbedone:master -b doitandbedone:vlc-support
+          hub pull-request -m "Merge from master" -h doitandbedone:master -b doitandbedone:feature/workflow-version-tagger
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
