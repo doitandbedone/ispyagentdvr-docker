@@ -24,3 +24,5 @@ jobs:
           git config user.email github-actions@github.com
           hub pull-request -m "Merge from master" -b doitandbedone:master -h doitandbedone:vlc-support
           hub pull-request -m "Merge from master" -b doitandbedone:master -h doitandbedone:feature/workflow-version-tagger
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
