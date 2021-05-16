@@ -68,8 +68,11 @@ EXPOSE 50000-50010/udp
 # Data volumes
 VOLUME ["/agent/Media/XML", "/agent/Media/WebServerRoot/Media", "/agent/Commands"]
 
+# Copy local files
+COPY healthcheck /healthcheck
+
 # Define service entrypoint
 CMD ["dotnet", "/agent/Agent.dll"]
 
 HEALTHCHECK --interval=15s --timeout=15s --start-period=30s \ 
-CMD curl -sS 127.0.0.1:8090 || exit 1
+CMD ["sh", "healthcheck"]
