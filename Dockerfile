@@ -7,7 +7,6 @@ ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
 ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux"
 ARG DEBIAN_FRONTEND=noninteractive 
 ARG TZ=America/Los_Angeles
-    
 
 # Download and install dependencies
 RUN apt-get update \
@@ -71,3 +70,6 @@ VOLUME ["/agent/Media/XML", "/agent/Media/WebServerRoot/Media", "/agent/Commands
 
 # Define service entrypoint
 CMD ["dotnet", "/agent/Agent.dll"]
+
+HEALTHCHECK --interval=15s --timeout=15s --start-period=30s \ 
+CMD curl -sS 127.0.0.1:8090 || exit 1
