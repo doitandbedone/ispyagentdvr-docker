@@ -7,10 +7,20 @@ ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
 ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux"
 ARG DEBIAN_FRONTEND=noninteractive 
 ARG TZ=America/Los_Angeles
+ARG USERNAME=ispyagent
+ENV USERNAME=$USERNAME
+ARG PUID=404
+ARG PGID=404
+ENV PUID=$PUID
+ENV PGID=$PGID
+
+# Add non-root user
+RUN addgroup ispyadmins --gid $PGID
+RUN useradd -u $PUID -g $PGID $USERNAME
 
 # Download and install dependencies
 RUN apt-get update \
-    && apt-get install -y wget libtbb-dev libc6-dev unzip multiarch-support gss-ntlmssp software-properties-common \
+    && apt-get install -y gosu wget libtbb-dev libc6-dev unzip multiarch-support gss-ntlmssp software-properties-common \
     && wget http://security.ubuntu.com/ubuntu/pool/main/libj/libjpeg-turbo/libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb \
     && wget http://fr.archive.ubuntu.com/ubuntu/pool/main/libj/libjpeg8-empty/libjpeg8_8c-2ubuntu8_amd64.deb \
     && dpkg -i libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb \
@@ -24,9 +34,9 @@ RUN add-apt-repository -y ppa:jonathonf/ffmpeg-4 && \
 
 # Download/Install iSpy Agent DVR: 
 # Check if we were given a specific version
-RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
-    echo "Downloading from specific location: ${FILE_LOCATION}" && \
-    wget -c ${FILE_LOCATION} -O agent.zip; \
+RUN if [ "$FILE_LOCATION_SET" = "true" ]; then \
+    echo "Downloading from specific location: $FILE_LOCATION" && \
+    wget -c $FILE_LOCATION -O agent.zip; \
     else \
     #Get latest instead
     echo "Downloading latest" && \
@@ -47,6 +57,9 @@ RUN apt-get -y --purge remove unzip wget \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Allow non-root user to access files
+RUN chown -R $PUID:$PGID /agent && chmod g+s /agent && ls -la
+
 # Docker needs to run a TURN server to get webrtc traffic to and from it over forwarded ports from the host
 # These are the default ports. If the ports below are modified here you'll also need to set the ports in XML/Config.xml
 # for example <TurnServerPort>3478</TurnServerPort><TurnServerMinPort>50000</TurnServerMinPort><TurnServerMaxPort>50010</TurnServerMaxPort>
@@ -65,14 +78,14 @@ EXPOSE 3478/udp
 # TURN server UDP port range
 EXPOSE 50000-50010/udp
 
+# Copy local files
+COPY ./setup /
+
 # Data volumes
 VOLUME ["/agent/Media/XML", "/agent/Media/WebServerRoot/Media", "/agent/Commands"]
 
-# Copy local files
-COPY healthcheck /healthcheck
-
-# Define service entrypoint
-CMD ["dotnet", "/agent/Agent.dll"]
+# Run entrypoint setup
+ENTRYPOINT ["sh", "entrypoint.sh"]
 
 HEALTHCHECK --interval=15s --timeout=15s --start-period=30s \ 
-CMD ["sh", "healthcheck"]
+CMD ["sh", "healthcheck.sh"]
