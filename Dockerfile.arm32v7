@@ -1,5 +1,6 @@
 # Use MS maintained .net docker image wuith aspnet and core runtimes.
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.17-focal-arm32v7
+# switching to buster for GLIBC 2.28, required by libcvextern.so from AgentDVR latest
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.17-buster-slim-arm32v7
 
 #Define download location variables
 ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_ARM32_3_4_3_0.zip"
@@ -11,7 +12,7 @@ ARG TZ=America/Los_Angeles
 
 # Download and install dependencies
 RUN apt-get update \
-    && apt-get install -y wget libtbb-dev libc6-dev unzip multiarch-support gss-ntlmssp software-properties-common libatlas-base-dev \
+    && apt-get install -y wget libtbb-dev libc6-dev unzip multiarch-support gss-ntlmssp software-properties-common libatlas-base-dev gpg ffmpeg \
     && wget http://ports.ubuntu.com/pool/main/libj/libjpeg-turbo/libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_armhf.deb \
     && wget http://ports.ubuntu.com/pool/main/libj/libjpeg8-empty/libjpeg8_8c-2ubuntu8_armhf.deb \
     && dpkg -i libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_armhf.deb \
@@ -20,8 +21,8 @@ RUN apt-get update \
     && rm libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_armhf.deb
 
 # Install jonathon's ffmpeg
-RUN add-apt-repository -y ppa:jonathonf/ffmpeg-4 && \
-    apt-get update && apt-get install -y ffmpeg
+#RUN add-apt-repository -y ppa:jonathonf/ffmpeg-4 && \
+#    apt-get update && apt-get install -y ffmpeg
 
 # Download/Install iSpy Agent DVR: 
 # Check if we were given a specific version
