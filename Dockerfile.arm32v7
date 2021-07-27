@@ -1,5 +1,5 @@
 # Use MS maintained .net docker image wuith aspnet and core runtimes.
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.10-bionic-arm32v7
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.17-bionic-arm32v7
 
 #Define download location variables
 ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_ARM32_3_4_3_0.zip"
