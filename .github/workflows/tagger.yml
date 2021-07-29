@@ -53,8 +53,10 @@ jobs:
 
       - name: Tag new version
         if: ${{steps.lastTag.outputs.tag != env.VERSION}}
-        uses: tvdias/github-tagger@v0.0.2
-        with:
-          repo-token: ${{secrets.PAT}}
-          tag: ${{env.VERSION}}
-          commit-sha: ${{steps.update_dockerfile.outputs.sha}}
+        uses: actions/checkout@v2
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git tag -a $VERSION $OUTPUT_SHA
+        env:
+          OUTPUT_SHA: ${{steps.update_dockerfile.outputs.sha}}
