@@ -51,9 +51,9 @@ jobs:
           token: ${{secrets.PAT}}
           args: "FILE_LOCATION=\"${{env.FILE_LOCATION}}\""
 
+      - uses: actions/checkout@v2
       - name: Tag new version
         if: ${{steps.lastTag.outputs.tag != env.VERSION}}
-        uses: actions/checkout@v2
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
