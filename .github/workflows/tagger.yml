@@ -21,6 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          featch-depth: 0
       - name: Get previous tag
         id: lastTag
         run: echo TAG_VERSION=$(git describe --tags `git rev-list --tags --max-count=1`)
