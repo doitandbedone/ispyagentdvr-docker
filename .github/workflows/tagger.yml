@@ -60,7 +60,7 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git tag -a $VERSION $OUTPUT_SHA
+          git tag -a $VERSION
           git push
         env:
           OUTPUT_SHA: ${{steps.update_dockerfile.outputs.sha}}
