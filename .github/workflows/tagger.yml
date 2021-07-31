@@ -20,10 +20,10 @@ jobs:
     # This runs the job on ubuntu
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Get previous tag
         id: lastTag
-        uses: WyriHaximus/github-action-get-previous-tag@0.2.0
+        uses: WyriHaximus/github-action-get-previous-tag@v1
         env:
           GITHUB_TOKEN: ${{secrets.PAT}}
 
@@ -51,10 +51,13 @@ jobs:
           token: ${{secrets.PAT}}
           args: "FILE_LOCATION=\"${{env.FILE_LOCATION}}\""
 
+      - uses: actions/checkout@v2
+        with:
+          token: ${{secrets.PAT}}
       - name: Tag new version
         if: ${{steps.lastTag.outputs.tag != env.VERSION}}
-        uses: tvdias/github-tagger@v0.0.2
-        with:
-          repo-token: ${{secrets.PAT}}
-          tag: ${{env.VERSION}}
-          commit-sha: ${{steps.update_dockerfile.outputs.sha}}
+        run: |
+          git tag -a $VERSION $OUTPUT_SHA
+          git push
+        env:
+          OUTPUT_SHA: ${{steps.update_dockerfile.outputs.sha}}
