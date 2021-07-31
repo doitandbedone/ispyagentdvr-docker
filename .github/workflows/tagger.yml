@@ -40,7 +40,7 @@ jobs:
       - name: Compare versions
         run: |
           dpkg --compare-versions $LAST_TAG_VERSION "lt" $LATEST_VERSION
-          echo NEEDS_TAG=$?
+          NEEDS_TAG=$?
           echo Comparison returned $NEEDS_TAG
           echo Latest tag search returned $LATEST_TAG_EXISTS
           if [ $NEEDS_TAG ] || ! [ $LATEST_TAG_EXISTS ]
