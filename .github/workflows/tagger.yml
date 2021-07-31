@@ -38,12 +38,12 @@ jobs:
         run: echo ${{env.VERSION}}
 
       - name: Compare versions
-        if: ${{TAG_VERSION != env.VERSION}}
+        if: ${{env.TAG_VERSION != env.VERSION}}
         run: echo New tag ${{env.VERSION}} will be created
 
       - name: Update Agent version in Dockerfile
         id: update_dockerfile
-        if: ${{TAG_VERSION != env.VERSION}}
+        if: ${{env.TAG_VERSION != env.VERSION}}
         uses: doitandbedone/dockerfile-updater@feature/output-sha-and-branch-name
         with:
           token: ${{secrets.PAT}}
@@ -53,7 +53,7 @@ jobs:
         with:
           token: ${{secrets.PAT}}
       - name: Tag new version
-        if: ${{TAG_VERSION != env.VERSION}}
+        if: ${{env.TAG_VERSION != env.VERSION}}
         run: |
           git tag -a $VERSION $OUTPUT_SHA
           git push
