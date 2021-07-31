@@ -53,7 +53,7 @@ jobs:
             NEEDS_TAG=true
             echo New tag ${{env.LATEST_VERSION}} will be created
           else
-            NEEDS_TAG=false
+            NEEDS_TAG=null
             echo No new tag will be created
           fi
           echo NEEDS_TAG=$NEEDS_TAG >> $GITHUB_ENV
