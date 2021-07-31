@@ -52,12 +52,13 @@ jobs:
           args: "FILE_LOCATION=\"${{env.FILE_LOCATION}}\""
 
       - uses: actions/checkout@v2
-        with:
-          token: ${{secrets.PAT}}
       - name: Tag new version
         if: ${{env.TAG_VERSION != env.VERSION}}
         run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
           git tag -a $VERSION $OUTPUT_SHA
           git push
         env:
           OUTPUT_SHA: ${{steps.update_dockerfile.outputs.sha}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
