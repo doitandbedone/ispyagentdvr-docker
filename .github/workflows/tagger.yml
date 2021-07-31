@@ -50,10 +50,10 @@ jobs:
           echo Latest tag search returned $LATEST_TAG_EXISTS
           if [ $NEEDS_TAG ] && ! [ $LATEST_TAG_EXISTS ]
           then
-            NEEDS_TAG=1
+            NEEDS_TAG=true
             echo New tag ${{env.LATEST_VERSION}} will be created
           else
-            NEEDS_TAG=0
+            NEEDS_TAG=false
             echo No new tag will be created
           fi
           echo NEEDS_TAG=$NEEDS_TAG >> $GITHUB_ENV
