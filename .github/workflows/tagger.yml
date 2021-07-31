@@ -42,6 +42,7 @@ jobs:
       - name: Compare versions
         run: |
           echo NEEDS_TAG=$(dpkg --compare-versions $TAG_VERSION "lt" $VERSION) >> $GITHUB_ENV
+          echo $NEEDS_TAG
           if [ $NEEDS_TAG ]
           then
             echo New tag ${{env.VERSION}} will be created
