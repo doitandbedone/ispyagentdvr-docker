@@ -52,11 +52,13 @@ jobs:
           args: "FILE_LOCATION=\"${{env.FILE_LOCATION}}\""
 
       - uses: actions/checkout@v2
-      - name: Tag new version
         with:
           token: ${{secrets.PAT}}
+      - name: Tag new version
         if: ${{steps.lastTag.outputs.tag != env.VERSION}}
         run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
           git tag -a $VERSION $OUTPUT_SHA
           git push
         env:
