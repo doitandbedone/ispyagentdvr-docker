@@ -55,7 +55,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{steps.update_dockerfile.outputs.sha}}
-          token: ${{secrects.PAT}}
+          token: ${{secrets.PAT}}
       - name: Tag new version
         if: ${{env.TAG_VERSION != env.VERSION}}
         run: |
