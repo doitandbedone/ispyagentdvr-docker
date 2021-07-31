@@ -25,7 +25,7 @@ jobs:
           fetch-depth: 0
       - name: Get previous tag
         id: lastTag
-        run: echo TAG_VERSION=$(git describe --tags `git rev-list --tags --max-count=1`)
+        run: echo TAG_VERSION=$(git describe --tags `git rev-list --tags --max-count=1`) >> $GITHUB_ENV
 
       - name: Get file name
         run: echo FILE_LOCATION=$(echo $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux" | tr -d '"')) >> $GITHUB_ENV
@@ -51,14 +51,17 @@ jobs:
           token: ${{secrets.PAT}}
           args: "FILE_LOCATION=\"${{env.FILE_LOCATION}}\""
 
-      - uses: actions/checkout@v2
       - name: Tag new version
-        if: ${{env.TAG_VERSION != env.VERSION}}
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git tag -a $VERSION $OUTPUT_SHA
-          git push
+        uses: actions/github-script@v3
         env:
-          OUTPUT_SHA: ${{steps.update_dockerfile.outputs.sha}}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SHA: ${{steps.update_dockerfile.outputs.sha}}
+        with:
+          github-token: ${{ secrets.PAT }}
+          script: |
+            console.log(context)
+            github.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: "refs/tags/" + process.env.VERSION,
+              sha: process.env.SHA
+            })
