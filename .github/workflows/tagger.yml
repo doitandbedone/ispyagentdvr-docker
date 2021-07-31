@@ -20,12 +20,12 @@ jobs:
     # This runs the job on ubuntu
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Get previous tag
         id: lastTag
-        uses: WyriHaximus/github-action-get-previous-tag@0.2.0
-        env:
-          GITHUB_TOKEN: ${{secrets.PAT}}
+        run: echo TAG_VERSION=$(git describe --tags `git rev-list --tags --max-count=1`)
 
       - name: Get file name
         run: echo FILE_LOCATION=$(echo $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux" | tr -d '"')) >> $GITHUB_ENV
@@ -40,12 +40,12 @@ jobs:
         run: echo ${{env.VERSION}}
 
       - name: Compare versions
-        if: ${{steps.lastTag.outputs.tag != env.VERSION}}
+        if: ${{env.TAG_VERSION != env.VERSION}}
         run: echo New tag ${{env.VERSION}} will be created
 
       - name: Update Agent version in Dockerfile
         id: update_dockerfile
-        if: ${{steps.lastTag.outputs.tag != env.VERSION}}
+        if: ${{env.TAG_VERSION != env.VERSION}}
         uses: doitandbedone/dockerfile-updater@feature/output-sha-and-branch-name
         with:
           token: ${{secrets.PAT}}
@@ -53,10 +53,12 @@ jobs:
 
       - uses: actions/checkout@v2
       - name: Tag new version
-        if: ${{steps.lastTag.outputs.tag != env.VERSION}}
+        if: ${{env.TAG_VERSION != env.VERSION}}
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git tag -a $VERSION $OUTPUT_SHA
+          git push
         env:
           OUTPUT_SHA: ${{steps.update_dockerfile.outputs.sha}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
