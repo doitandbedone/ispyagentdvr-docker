@@ -43,7 +43,7 @@ jobs:
           NEEDS_TAG=$?
           echo Comparison returned $NEEDS_TAG
           echo Latest tag search returned $LATEST_TAG_EXISTS
-          if [ $NEEDS_TAG ] || ! [ $LATEST_TAG_EXISTS ]
+          if [ $NEEDS_TAG ] && ! [ $LATEST_TAG_EXISTS ]
           then
             echo New tag ${{env.LATEST_VERSION}} will be created
           else
