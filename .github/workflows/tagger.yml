@@ -42,9 +42,9 @@ jobs:
         run: |
           if [ dpkg --compare-versions $LAST_TAG_VERSION "lt" $LATEST_VERSION ]
           then
-            NEEDS_TAG=1
+            NEEDS_TAG=true
           else
-            NEEDS_TAG=0
+            NEEDS_TAG=false
           fi
           echo Comparison returned $NEEDS_TAG
           echo Latest tag search returned $LATEST_TAG_EXISTS
