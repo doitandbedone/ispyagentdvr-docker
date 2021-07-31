@@ -42,7 +42,9 @@ jobs:
       - name: Compare versions
         run: |
           dpkg --compare-versions $TAG_VERSION "lt" $VERSION
-          echo NEEDS_TAG=$? >> $GITHUB_ENV
+          result=$?
+          echo $result
+          echo NEEDS_TAG=$result >> $GITHUB_ENV
           echo $NEEDS_TAG
           if [ $NEEDS_TAG ]
           then
