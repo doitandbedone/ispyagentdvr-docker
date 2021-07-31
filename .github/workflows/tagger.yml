@@ -22,10 +22,12 @@ jobs:
     steps:
       - name: Get latest file and extract version number
         run: |
-          echo FILE_LOCATION=$(echo $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux" | tr -d '"')) >> $GITHUB_ENV
+          FILE_LOCATION=$(echo $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux" | tr -d '"'))
+          echo FILE_LOCATION=$FILE_LOCATION >> $GITHUB_ENV
           echo $FILE_LOCATION
-          echo LATEST_VERSION=$(echo $FILE_LOCATION | grep -Po "(?<=Linux64_).*(?=.zip)" | tr _ .) >> $GITHUB_ENV
-          echo ${{env.LATEST_VERSION}}
+          LATEST_VERSION=$(echo $FILE_LOCATION | grep -Po "(?<=Linux64_).*(?=.zip)" | tr _ .)
+          echo LATEST_VERSION=$LATEST_VERSION >> $GITHUB_ENV
+          echo $LATEST_VERSION
           
       - uses: actions/checkout@v2
         with:
