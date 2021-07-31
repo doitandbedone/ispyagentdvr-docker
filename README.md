@@ -33,9 +33,11 @@ docker run -it -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
 -v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
 -v /appdata/ispyagentdvr/commands:/agent/Commands/ \
+-e TZ=America/Los_Angeles \
 --name ispyagentdvr doitandbedone/ispyagentdvr
 ```
-This will default to the latest. See Tags section for other versions.
+This will default to the latest. See Tags section for other versions. Make sure to change TZ value to your own timezone, here's a table with all values:
+https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
 ### Tags:
 #### latest:
@@ -45,6 +47,7 @@ docker run -it -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
 -v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
 -v /appdata/ispyagentdvr/commands:/agent/Commands/ \
+-e TZ=America/Los_Angeles \
 --name ispyagentdvr doitandbedone/ispyagentdvr:latest
 ```
 
@@ -56,6 +59,7 @@ docker run -it -p 8090:8090 -p 3478:3478/udp 50000-50010:50000-50010/udp \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
 -v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
 -v /appdata/ispyagentdvr/commands:/agent/Commands/ \
+-e TZ=America/Los_Angeles \
 --name ispyagentdvr doitandbedone/ispyagentdvr:2.7.6.0
 ```
 
@@ -70,6 +74,7 @@ docker run -it -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
 -v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
 -v /appdata/ispyagentdvr/commands:/agent/Commands/ \
+ -e TZ=America/Los_Angeles \
 --name ispyagentdvr doitandbedone/ispyagentdvr:vlc
 ```
 
