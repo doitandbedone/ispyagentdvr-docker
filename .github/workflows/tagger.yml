@@ -58,9 +58,10 @@ jobs:
         with:
           github-token: ${{ secrets.PAT }}
           script: |
+            console.log(context)
             github.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: `refs/tags/${VERSION}`,
-              sha: `${SHA}`
+              ref: "refs/tags/" + process.env.VERSION,
+              sha: process.env.SHA
             })
