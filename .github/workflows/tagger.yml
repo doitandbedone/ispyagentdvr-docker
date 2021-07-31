@@ -38,16 +38,22 @@ jobs:
           echo LATEST_TAG_EXISTS=$(git tag -l "$LATEST_VERSION") >> $GITHUB_ENV
           
       - name: Compare versions
+        #dpkg --compare-versions returns 0 if it's true and non-zero if false
         run: |
-          dpkg --compare-versions $LAST_TAG_VERSION "lt" $LATEST_VERSION
-          NEEDS_TAG=$?
+          if [ dpkg --compare-versions $LAST_TAG_VERSION "lt" $LATEST_VERSION ]
+          then
+            NEEDS_TAG=1
+          else
+            NEEDS_TAG=0
+          fi
           echo Comparison returned $NEEDS_TAG
           echo Latest tag search returned $LATEST_TAG_EXISTS
           if [ $NEEDS_TAG ] && ! [ $LATEST_TAG_EXISTS ]
           then
+            NEEDS_TAG=1
             echo New tag ${{env.LATEST_VERSION}} will be created
           else
-            NEEDS_TAG=1
+            NEEDS_TAG=0
             echo No new tag will be created
           fi
           echo NEEDS_TAG=$NEEDS_TAG >> $GITHUB_ENV
