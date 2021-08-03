@@ -20,48 +20,64 @@ jobs:
     # This runs the job on ubuntu
     runs-on: ubuntu-latest
     steps:
+      - name: Get latest file and extract version number
+        run: |
+          FILE_LOCATION=$(echo $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux" | tr -d '"'))
+          echo FILE_LOCATION=$FILE_LOCATION >> $GITHUB_ENV
+          echo $FILE_LOCATION
+          LATEST_VERSION=$(echo $FILE_LOCATION | grep -Po "(?<=Linux64_).*(?=.zip)" | tr _ .)
+          echo LATEST_VERSION=$LATEST_VERSION >> $GITHUB_ENV
+          echo $LATEST_VERSION
+          
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Get previous tag
-        id: lastTag
-        run: echo TAG_VERSION=$(git describe --tags `git rev-list --tags --max-count=1`)
-
-      - name: Get file name
-        run: echo FILE_LOCATION=$(echo $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux" | tr -d '"')) >> $GITHUB_ENV
-
-      - name: Print FILE_LOCATION
-        run: echo ${{env.FILE_LOCATION}}
-
-      - name: Get version number
-        run: echo VERSION=$(echo $FILE_LOCATION | grep -Po "(?<=Linux64_).*(?=.zip)" | tr _ .) >> $GITHUB_ENV
-
-      - name: Print VERSION
-        run: echo ${{env.VERSION}}
-
+      - name: Get latest tag and search for tag with current version
+        run: |
+          echo LAST_TAG_VERSION=$(git describe --tags `git rev-list --tags --max-count=1`) >> $GITHUB_ENV
+          echo LATEST_TAG_EXISTS=$(git tag -l "$LATEST_VERSION") >> $GITHUB_ENV
+          
       - name: Compare versions
-        if: ${{env.TAG_VERSION != env.VERSION}}
-        run: echo New tag ${{env.VERSION}} will be created
+        #dpkg --compare-versions returns 0 if it's true and non-zero if false
+        run: |
+          if [ dpkg --compare-versions $LAST_TAG_VERSION "lt" $LATEST_VERSION ]
+          then
+            NEEDS_TAG=true
+          else
+            NEEDS_TAG=false
+          fi
+          echo Comparison returned $NEEDS_TAG
+          echo Latest tag search returned $LATEST_TAG_EXISTS
+          if [ $NEEDS_TAG ] && ! [ $LATEST_TAG_EXISTS ]
+          then
+            NEEDS_TAG=true
+            echo New tag ${{env.LATEST_VERSION}} will be created
+          else
+            NEEDS_TAG=false
+            echo No new tag will be created
+          fi
+          echo NEEDS_TAG=$NEEDS_TAG >> $GITHUB_ENV
 
-      - name: Update Agent version in Dockerfile
+      - if: ${{env.NEEDS_TAG == true}}
+        name: Update Agent version in Dockerfile
         id: update_dockerfile
-        if: ${{env.TAG_VERSION != env.VERSION}}
         uses: doitandbedone/dockerfile-updater@feature/output-sha-and-branch-name
         with:
           token: ${{secrets.PAT}}
           args: "FILE_LOCATION=\"${{env.FILE_LOCATION}}\""
 
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          ref: ${{steps.update_dockerfile.outputs.sha}}
-      - name: Tag new version
-        if: ${{env.TAG_VERSION != env.VERSION}}
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git tag -a $VERSION $OUTPUT_SHA
-          git push
+      - if: ${{env.NEEDS_TAG == true}}
+        name: Tag new version
+        uses: actions/github-script@v3
         env:
-          OUTPUT_SHA: ${{steps.update_dockerfile.outputs.sha}}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SHA: ${{steps.update_dockerfile.outputs.sha}}
+        with:
+          github-token: ${{ secrets.PAT }}
+          script: |
+            console.log(context)
+            github.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: "refs/tags/" + process.env.LATEST_VERSION,
+              sha: process.env.SHA
+            })
