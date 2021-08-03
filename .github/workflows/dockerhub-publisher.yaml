@@ -1,0 +1,74 @@
+name: Publish to Docker Hub
+
+on:
+  #Push trigger
+  push:
+    branches:
+      - master
+      - vlc-support
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+.[0-9]+'
+  #Manual dispatch trigger
+  workflow_dispatch:
+  #Remote github trigger
+  repository_dispatch:
+    types: execute
+jobs:
+  push_to_registry:
+    name: Push Docker image to Docker Hub
+    runs-on: ubuntu-latest
+    env: 
+      DOCKERHUB_IMAGE: doitandbedone/ispyagentdvr
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v2
+        
+      - name: Log into Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+      
+      - name: Extract metadata (tags, labels) for Docker for non-latest
+        id: meta-non-latest
+        uses: docker/metadata-action@v3
+        with:
+          flavor: |
+            latest=false
+          images: ${{env.DOCKERHUB_IMAGE}}
+          
+      - name: Get the ref name
+        run: echo REF_NAME=${GITHUB_REF/refs\/*\//} >> $GITHUB_ENV
+          
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: doitandbedone/ispyagentdvr
+          
+      - name: Build and push Docker image for tags
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: ${{ github.event_name == 'push tag' }}
+          tags: '${{env.DOCKERHUB_IMAGE}}:${{env.REF_NAME}}'
+          labels: ${{ steps.meta-tag.outputs.labels }}
+          
+      - name: Build and push Docker image for master
+        if: contains(github.ref, 'refs/heads/master')
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: ${{ github.event_name == 'push' }}
+          tags: '${{env.DOCKERHUB_IMAGE}}:latest'
+          labels: ${{ steps.meta.outputs.labels }}
+          
+      - name: Build and push Docker image for vlc
+        if: contains(github.ref, 'refs/heads/vlc-support')
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: ${{ github.event_name == 'push' }}
+          tags: '${{env.DOCKERHUB_IMAGE}}:${{env.REF_NAME}}'
+          labels: ${{ steps.meta-non-latest.outputs.labels }}
