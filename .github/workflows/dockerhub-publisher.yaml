@@ -35,6 +35,9 @@ jobs:
             latest=false
           images: doitandbedone/ispyagentdvr
           
+      - name: Get the ref name
+        run: echo REF_NAME=${GITHUB_REF/refs\/*\//} >> $GITHUB_ENV
+          
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v3
@@ -47,7 +50,7 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name == 'push tag' }}
-          tags: ${{ steps.meta-tag.outputs.tags }}
+          tags: ${{ env.REF_NAME }}
           labels: ${{ steps.meta-tag.outputs.labels }}
           
       - name: Build and push Docker image for master
@@ -56,7 +59,7 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name == 'push' }}
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: latest
           labels: ${{ steps.meta.outputs.labels }}
           
       - name: Build and push Docker image for vlc
@@ -65,5 +68,5 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name == 'push' }}
-          tags: ${{ steps.meta-non-latest.outputs.tags }}
+          tags: vlc-support
           labels: ${{ steps.meta-non-latest.outputs.labels }}
