@@ -17,6 +17,8 @@ jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
+    env: 
+      DOCKERHUB_IMAGE: doitandbedone/ispyagentdvr
     steps:
       - name: Check out repo
         uses: actions/checkout@v2
@@ -33,7 +35,7 @@ jobs:
         with:
           flavor: |
             latest=false
-          images: doitandbedone/ispyagentdvr
+          images: ${{env.DOCKERHUB_IMAGE}}
           
       - name: Get the ref name
         run: echo REF_NAME=${GITHUB_REF/refs\/*\//} >> $GITHUB_ENV
@@ -50,7 +52,7 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name == 'push tag' }}
-          tags: ${{ env.REF_NAME }}
+          tags: '${{env.DOCKERHUB_IMAGE}}:${{env.REF_NAME}}'
           labels: ${{ steps.meta-tag.outputs.labels }}
           
       - name: Build and push Docker image for master
@@ -59,7 +61,7 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name == 'push' }}
-          tags: latest
+          tags: '${{env.DOCKERHUB_IMAGE}}:latest'
           labels: ${{ steps.meta.outputs.labels }}
           
       - name: Build and push Docker image for vlc
@@ -68,5 +70,5 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name == 'push' }}
-          tags: vlc-support
+          tags: '${{env.DOCKERHUB_IMAGE}}:${{env.REF_NAME}}'
           labels: ${{ steps.meta-non-latest.outputs.labels }}
