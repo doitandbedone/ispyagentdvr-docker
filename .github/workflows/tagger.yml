@@ -40,7 +40,7 @@ jobs:
       - name: Compare versions
         #dpkg --compare-versions returns 0 if it's true and non-zero if false
         run: |
-          if [ dpkg --compare-versions $LAST_TAG_VERSION "lt" $LATEST_VERSION ]
+          if $(dpkg --compare-versions $LAST_TAG_VERSION "lt" $LATEST_VERSION)
           then
             NEEDS_TAG=true
           else
