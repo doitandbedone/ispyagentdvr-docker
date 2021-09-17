@@ -57,6 +57,7 @@ jobs:
             echo No new tag will be created
           fi
           echo NEEDS_TAG=$NEEDS_TAG >> $GITHUB_ENV
+          echo ${{env.NEEDS_TAG}}
 
       - if: ${{env.NEEDS_TAG == true}}
         name: Update Agent version in Dockerfile
