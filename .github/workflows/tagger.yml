@@ -28,6 +28,7 @@ jobs:
           LATEST_VERSION=$(echo $FILE_LOCATION | grep -Po "(?<=Linux64_).*(?=.zip)" | tr _ .)
           echo LATEST_VERSION=$LATEST_VERSION >> $GITHUB_ENV
           echo $LATEST_VERSION
+          echo ${{env.LATEST_VERSION}}
           
       - uses: actions/checkout@v2
         with:
@@ -56,6 +57,7 @@ jobs:
             NEEDS_TAG=false
             echo No new tag will be created
           fi
+          echo $NEEDS_TAG
           echo NEEDS_TAG=$NEEDS_TAG >> $GITHUB_ENV
           echo ${{env.NEEDS_TAG}}
 
