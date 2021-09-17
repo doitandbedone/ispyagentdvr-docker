@@ -28,7 +28,6 @@ jobs:
           LATEST_VERSION=$(echo $FILE_LOCATION | grep -Po "(?<=Linux64_).*(?=.zip)" | tr _ .)
           echo LATEST_VERSION=$LATEST_VERSION >> $GITHUB_ENV
           echo $LATEST_VERSION
-          echo ${{env.LATEST_VERSION}}
           
       - uses: actions/checkout@v2
         with:
@@ -59,9 +58,8 @@ jobs:
           fi
           echo $NEEDS_TAG
           echo NEEDS_TAG=$NEEDS_TAG >> $GITHUB_ENV
-          echo ${{env.NEEDS_TAG}}
 
-      - if: ${{env.NEEDS_TAG == true}}
+      - if: env.NEEDS_TAG
         name: Update Agent version in Dockerfile
         id: update_dockerfile
         uses: doitandbedone/dockerfile-updater@feature/output-sha-and-branch-name
@@ -69,7 +67,7 @@ jobs:
           token: ${{secrets.PAT}}
           args: "FILE_LOCATION=\"${{env.FILE_LOCATION}}\""
 
-      - if: ${{env.NEEDS_TAG == true}}
+      - if: env.NEEDS_TAG
         name: Tag new version
         uses: actions/github-script@v3
         env:
