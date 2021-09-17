@@ -40,7 +40,7 @@ jobs:
       - name: Compare versions
         #dpkg --compare-versions returns 0 if it's true and non-zero if false
         run: |
-          if [ dpkg --compare-versions $LAST_TAG_VERSION "lt" $LATEST_VERSION ]
+          if $(dpkg --compare-versions $LAST_TAG_VERSION "lt" $LATEST_VERSION)
           then
             NEEDS_TAG=true
           else
@@ -56,9 +56,10 @@ jobs:
             NEEDS_TAG=false
             echo No new tag will be created
           fi
+          echo $NEEDS_TAG
           echo NEEDS_TAG=$NEEDS_TAG >> $GITHUB_ENV
 
-      - if: ${{env.NEEDS_TAG == true}}
+      - if: env.NEEDS_TAG
         name: Update Agent version in Dockerfile
         id: update_dockerfile
         uses: doitandbedone/dockerfile-updater@feature/output-sha-and-branch-name
@@ -66,7 +67,7 @@ jobs:
           token: ${{secrets.PAT}}
           args: "FILE_LOCATION=\"${{env.FILE_LOCATION}}\""
 
-      - if: ${{env.NEEDS_TAG == true}}
+      - if: env.NEEDS_TAG
         name: Tag new version
         uses: actions/github-script@v3
         env:
