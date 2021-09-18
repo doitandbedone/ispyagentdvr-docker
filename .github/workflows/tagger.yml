@@ -59,7 +59,7 @@ jobs:
           echo $NEEDS_TAG
           echo NEEDS_TAG=$NEEDS_TAG >> $GITHUB_ENV
 
-      - if: env.NEEDS_TAG
+      - if: env.NEEDS_TAG == 'true'
         name: Update Agent version in Dockerfile
         id: update_dockerfile
         uses: doitandbedone/dockerfile-updater@feature/output-sha-and-branch-name
@@ -67,7 +67,7 @@ jobs:
           token: ${{secrets.PAT}}
           args: "FILE_LOCATION=\"${{env.FILE_LOCATION}}\""
 
-      - if: env.NEEDS_TAG
+      - if: env.NEEDS_TAG == 'true'
         name: Tag new version
         uses: actions/github-script@v3
         env:
