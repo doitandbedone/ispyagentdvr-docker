@@ -51,7 +51,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          push: ${{ github.event_name == 'push tag' }}
+          push: ${{ github.event_name == 'push' }}
           tags: '${{env.DOCKERHUB_IMAGE}}:${{env.REF_NAME}}'
           labels: ${{ steps.meta-tag.outputs.labels }}
           
