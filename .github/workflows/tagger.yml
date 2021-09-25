@@ -69,14 +69,14 @@ jobs:
 
       - if: env.NEEDS_TAG == 'true'
         name: Tag new version
-        uses: actions/github-script@v3
+        uses: actions/github-script@v5
         env:
           SHA: ${{steps.update_dockerfile.outputs.sha}}
         with:
           github-token: ${{ secrets.PAT }}
           script: |
             console.log(context)
-            github.git.createRef({
+            github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: "refs/tags/" + process.env.LATEST_VERSION,
