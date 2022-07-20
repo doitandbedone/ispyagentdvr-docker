@@ -1,29 +1,28 @@
 # Use MS maintained .net docker image wuith aspnet and core runtimes.
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.10-bionic
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.27-focal
 
 #Define download location variables
 ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_4_0_9_0.zip"
 ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
 ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux"
-ARG DEBIAN_FRONTEND=noninteractive 
+ARG DEBIAN_FRONTEND=noninteractive
 ARG TZ=America/Los_Angeles
-    
+
 
 # Download and install dependencies
 RUN apt-get update \
-    && apt-get install -y wget libtbb-dev libc6-dev unzip multiarch-support gss-ntlmssp software-properties-common \
-    && wget http://security.ubuntu.com/ubuntu/pool/main/libj/libjpeg-turbo/libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb \
+    && apt-get install -y wget libtbb-dev libc6-dev unzip gss-ntlmssp software-properties-common ffmpeg \
+    && wget http://security.ubuntu.com/ubuntu/pool/main/libj/libjpeg-turbo/libjpeg-turbo8_2.0.3-0ubuntu1.20.04.1_amd64.deb \
     && wget http://fr.archive.ubuntu.com/ubuntu/pool/main/libj/libjpeg8-empty/libjpeg8_8c-2ubuntu8_amd64.deb \
-    && dpkg -i libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb \
+    && wget http://archive.ubuntu.com/ubuntu/pool/main/g/glibc/multiarch-support_2.27-3ubuntu1_amd64.deb \
+    && dpkg -i libjpeg-turbo8_2.0.3-0ubuntu1.20.04.1_amd64.deb \
     && dpkg -i libjpeg8_8c-2ubuntu8_amd64.deb \
+    && dpkg -i multiarch-support_2.27-3ubuntu1_amd64.deb \
     && rm libjpeg8_8c-2ubuntu8_amd64.deb \
-    && rm libjpeg-turbo8_1.5.2-0ubuntu5.18.04.4_amd64.deb
+    && rm libjpeg-turbo8_2.0.3-0ubuntu1.20.04.1_amd64.deb \
+    && rm multiarch-support_2.27-3ubuntu1_amd64.deb
 
-# Install jonathon's ffmpeg
-RUN add-apt-repository -y ppa:jonathonf/ffmpeg-4 && \
-    apt-get update && apt-get install -y ffmpeg
-
-# Download/Install iSpy Agent DVR: 
+# Download/Install iSpy Agent DVR:
 # Check if we were given a specific version
 RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
     echo "Downloading from specific location: ${FILE_LOCATION}" && \
@@ -35,15 +34,15 @@ RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
     fi && \
     unzip agent.zip -d /agent && \
     rm agent.zip
-    
+
 # Install libgdiplus, used for smart detection
 RUN apt-get install -y libgdiplus
-    
+
 # Install Time Zone
 RUN apt-get install -y tzdata
 
 # Clean up
-RUN apt-get -y --purge remove unzip wget \ 
+RUN apt-get -y --purge remove unzip wget \
     && apt autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
