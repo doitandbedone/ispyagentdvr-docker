@@ -14,6 +14,9 @@ ARG name
 RUN apt-get update \
     && apt-get install -y wget unzip software-properties-common alsa-utils
 
+# VLC support
+RUN apt-get install -y libvlc-dev vlc libx11-dev
+
 # Download/Install iSpy Agent DVR: 
 # Check if we were given a specific version
 RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
