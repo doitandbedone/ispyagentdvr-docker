@@ -1,4 +1,4 @@
-# Use Ubuntu LTS
+# Use MS maintained .net docker image wuith aspnet and core runtimes.
 FROM ubuntu:22.04
 
 #Define download location variables
@@ -7,12 +7,11 @@ ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
 ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux"
 ARG DEBIAN_FRONTEND=noninteractive 
 ARG TZ=America/Los_Angeles
-ARG name
     
 
 # Download and install dependencies
 RUN apt-get update \
-    && apt-get install -y wget unzip software-properties-common alsa-utils
+    && apt-get install -y wget unzip software-properties-common
 
 # Download/Install iSpy Agent DVR: 
 # Check if we were given a specific version
@@ -29,13 +28,6 @@ RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
     
 # Install libgdiplus, used for smart detection
 RUN apt-get install -y libgdiplus
-
-# Install ffmpeg
-RUN add-apt-repository -y ppa:savoury1/ffmpeg4 && \
-	add-apt-repository -y ppa:savoury1/ffmpeg5 && \
-	apt-get update && \
-	apt-get upgrade -y && \
-	apt-get install -y ffmpeg
     
 # Install Time Zone
 RUN apt-get install -y tzdata
@@ -58,6 +50,12 @@ RUN echo "Adding executable permissions" && \
     chmod +x /agent/agent-register.sh && \
     chmod +x /agent/agent-reset.sh && \
     chmod +x /agent/agent-reset-local-login.sh
+
+# Adding permissions for local device access
+RUN name=$(whoami) \
+    echo "Adding $(name) permission for local device access" && \
+    adduser $name video && \
+    usermod -a -G video $name
 
 # Define default environment variables
 ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin

@@ -1,4 +1,4 @@
-# Use Ubuntu LTS
+# Use MS maintained .net docker image wuith aspnet and core runtimes.
 FROM ubuntu:22.04
 
 #Define download location variables
@@ -31,10 +31,10 @@ RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
 RUN apt-get install -y libgdiplus
 
 # Install ffmpeg
-RUN add-apt-repository -y ppa:savoury1/ffmpeg4 && \
-	add-apt-repository -y ppa:savoury1/ffmpeg5 && \
-	apt-get update && \
-	apt-get upgrade -y && \
+RUN add-apt-repository -y ppa:savoury1/ffmpeg4 \
+	add-apt-repository -y ppa:savoury1/ffmpeg5 \
+	apt-get update \
+	apt-get upgrade -y \
 	apt-get install -y ffmpeg
     
 # Install Time Zone
@@ -58,6 +58,8 @@ RUN echo "Adding executable permissions" && \
     chmod +x /agent/agent-register.sh && \
     chmod +x /agent/agent-reset.sh && \
     chmod +x /agent/agent-reset-local-login.sh
+
+
 
 # Define default environment variables
 ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin

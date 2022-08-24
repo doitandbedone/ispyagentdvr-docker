@@ -1,4 +1,4 @@
-# Use Ubuntu LTS
+# Use MS maintained .net docker image wuith aspnet and core runtimes.
 FROM ubuntu:22.04
 
 #Define download location variables
