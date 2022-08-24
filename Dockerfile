@@ -30,6 +30,9 @@ RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
 # Install libgdiplus, used for smart detection
 RUN apt-get install -y libgdiplus
 
+# VLC support
+RUN apt-get install -y libvlc-dev vlc libx11-dev
+
 # Install ffmpeg
 RUN add-apt-repository -y ppa:savoury1/ffmpeg4 && \
 	add-apt-repository -y ppa:savoury1/ffmpeg5 && \
