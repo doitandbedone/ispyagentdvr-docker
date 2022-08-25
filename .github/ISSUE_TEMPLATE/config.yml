@@ -3,9 +3,3 @@ contact_links:
   - name: Ask a question
     url: https://github.com/doitandbedone/ispyagentdvr-docker/discussions/new
     about: Not sure if it's a bug, ask a question!
-  - name: Bug report
-    url: https://github.com/doitandbedone/ispyagentdvr-docker/issues/new?assignees=&labels=bug&template=bug_report.md&title=
-    about: Create a report to help us improve
-  - name: Feature request
-    url: https://github.com/doitandbedone/ispyagentdvr-docker/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=
-    about: Suggest an idea for this project
