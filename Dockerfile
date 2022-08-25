@@ -4,7 +4,7 @@ FROM ubuntu:22.04
 #Define download location variables
 ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_4_1_3_0.zip"
 ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
-ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux"
+ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocation4?platform=Linux64&fromVersion=0"
 ARG DEBIAN_FRONTEND=noninteractive 
 ARG TZ=America/Los_Angeles
 ARG name
@@ -22,7 +22,7 @@ RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
     else \
     #Get latest instead
     echo "Downloading latest" && \
-    wget -c $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux" | tr -d '"') -O agent.zip; \
+    wget -c $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation4?platform=Linux64&fromVersion=0" | tr -d '"') -O agent.zip; \
     fi && \
     unzip agent.zip -d /agent && \
     rm agent.zip
