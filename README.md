@@ -1,6 +1,15 @@
 # iSpy Agent DVR
-This is a docker image of agent dvr from ispy created for convenience. The software creates a local server for IP cameras to be managed. For more information visit:
+This is a docker image for Agent DVR from iSpy created for convenience. Please consider donating/sponsoring. While still in direct contact with iSpy, we still maintain this at our own time.
+The software creates a local server for IP cameras to be managed. For more information visit:
 https://www.ispyconnect.com/userguide-agent-dvr.aspx
+
+### Sponsorship/Donations:
+
+|Ways to support us| |
+|---|---|
+|Github|Paypal|
+[💗 Sponsor](https://github.com/sponsors/doitandbedone)|[![Paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate/?hosted_button_id=WE2AE6VBDVJBJ)|
+
 
 ## Recommended settings:
 ### Ports:
@@ -108,8 +117,5 @@ Also note if you remove the container you will have to do this again. Reason why
 - [Report an issue](https://github.com/doitandbedone/ispyagentdvr-docker/issues/new?assignees=&labels=bug&template=bug_report.md)
 - [Request a feature](https://github.com/doitandbedone/ispyagentdvr-docker/issues/new?assignees=&labels=enhancement&template=feature_request.md)
 - [Join our discussions](https://github.com/doitandbedone/ispyagentdvr-docker/discussions)
-
-### Tips/Donations:
-- All tips/donations are welcomed: [![Paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ADN2P5FBEBMZ4&item_name=All+tips%2Fcontributions+are+welcomed+and+will+fuel+development%21&currency_code=USD)
  
 
