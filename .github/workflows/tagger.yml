@@ -22,7 +22,7 @@ jobs:
     steps:
       - name: Get latest file and extract version number
         run: |
-          FILE_LOCATION=$(echo $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation2?productID=24&is64=true&platform=Linux" | tr -d '"'))
+          FILE_LOCATION=$(echo $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation4?platform=Linux64&fromVersion=0" | tr -d '"'))
           echo FILE_LOCATION=$FILE_LOCATION >> $GITHUB_ENV
           echo $FILE_LOCATION
           LATEST_VERSION=$(echo $FILE_LOCATION | grep -Po "(?<=Linux64_).*(?=.zip)" | tr _ .)
