@@ -43,6 +43,9 @@ RUN add-apt-repository -y ppa:savoury1/ffmpeg4 && \
 # Install Time Zone
 RUN apt-get install -y tzdata
 
+# Install curl, used for calling external webservices in Commands
+RUN apt-get install -y curl
+
 # Clean up
 RUN apt-get -y --purge remove unzip wget \ 
     && apt autoremove -y \
