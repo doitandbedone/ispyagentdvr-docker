@@ -2,7 +2,7 @@
 FROM ubuntu:22.04
 
 #Define download location variables
-ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_4_2_4_0.zip"
+ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_4_2_5_0.zip"
 ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
 ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocation4?platform=Linux64&fromVersion=0"
 ARG DEBIAN_FRONTEND=noninteractive 
