@@ -66,6 +66,8 @@ RUN echo "Adding executable permissions" && \
 
 # Define default environment variables
 ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# Fix a memory leak on encoded recording
+ENV MALLOC_TRIM_THRESHOLD_ 100000
 
 # Main UI port
 EXPOSE 8090
