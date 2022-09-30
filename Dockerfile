@@ -72,7 +72,7 @@ ENV MALLOC_TRIM_THRESHOLD_=100000
 # Main UI port
 EXPOSE 8090
 
-# TURN server port
+# STUN server port
 EXPOSE 3478/udp
 
 # TURN server UDP port range
