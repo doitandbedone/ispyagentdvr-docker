@@ -1,8 +1,10 @@
 # Use Ubuntu LTS
 FROM ubuntu:22.04
 
-#Define download location variables
-ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_4_2_6_0.zip"
+# Define download location variables
+
+ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_4_3_3_0.zip"
+
 ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
 ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocation4?platform=Linux64&fromVersion=0"
 ARG DEBIAN_FRONTEND=noninteractive 
@@ -63,12 +65,14 @@ RUN echo "Adding executable permissions" && \
     chmod +x /agent/agent-reset-local-login.sh
 
 # Define default environment variables
-ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# Fix a memory leak on encoded recording
+ENV MALLOC_TRIM_THRESHOLD_=100000
 
 # Main UI port
 EXPOSE 8090
 
-# TURN server port
+# STUN server port
 EXPOSE 3478/udp
 
 # TURN server UDP port range
