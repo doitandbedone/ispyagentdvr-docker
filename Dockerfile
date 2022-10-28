@@ -1,7 +1,7 @@
 # Use Ubuntu LTS
 FROM ubuntu:22.04
 
-#Define download location variables
+# Define download location variables
 
 ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_4_3_3_0.zip"
 
