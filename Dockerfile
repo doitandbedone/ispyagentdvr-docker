@@ -1,13 +1,12 @@
-# Use Ubuntu LTS
-FROM ubuntu:22.04
+# Use latest ubuntu version with ffmpeg5
+FROM ubuntu:22.10
 
-# Define download location variables
+#Define download location variables
 
-ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_4_4_6_0.zip"
-
+ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_LinuxARM64_4_2_9_0.zip"
 
 ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
-ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocation4?platform=Linux64&fromVersion=0"
+ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocation4?platform=LinuxARM64&fromVersion=0"
 ARG DEBIAN_FRONTEND=noninteractive 
 ARG TZ=America/Los_Angeles
 ARG name
@@ -25,7 +24,7 @@ RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
     else \
     #Get latest instead
     echo "Downloading latest" && \
-    wget -c $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation4?platform=Linux64&fromVersion=0" | tr -d '"') -O agent.zip; \
+    wget -c $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation4?platform=LinuxARM64&fromVersion=0" | tr -d '"') -O agent.zip; \
     fi && \
     unzip agent.zip -d /agent && \
     rm agent.zip
@@ -34,11 +33,7 @@ RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
 RUN apt-get install -y libgdiplus
 
 # Install ffmpeg
-RUN add-apt-repository -y ppa:savoury1/ffmpeg4 && \
-	add-apt-repository -y ppa:savoury1/ffmpeg5 && \
-	apt-get update && \
-	apt-get upgrade -y && \
-	apt-get install -y ffmpeg
+RUN apt-get install -y ffmpeg
     
 # Install Time Zone
 RUN apt-get install -y tzdata
