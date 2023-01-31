@@ -33,10 +33,10 @@ RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
       wget -c ${FILE_LOCATION} -O agent.zip; \
     else \
       #Get latest instead
-      arch=`dpkg --print-architecture` && \ 
-      echo "Adjusting for architecture for $arch" && \
+      arch=$(dpkg --print-architecture) && \
+      echo "Adjusting architecture to $arch" && \
       if [ "$arch" = "arm64" ]; then \
-    	DEFAULT_FILE_LOCATION=`echo $DEFAULT_FILE_LOCATION | sed -e 's/Linux64/LinuxARM64/'`; \
+    	DEFAULT_FILE_LOCATION=$(echo ${DEFAULT_FILE_LOCATION} | sed -e 's/Linux64/LinuxARM64/'); \
       fi && \
       echo "Downloading latest" && \
       wget -c $(wget -qO- ${DEFAULT_FILE_LOCATION} | tr -d '"') -O agent.zip; \
