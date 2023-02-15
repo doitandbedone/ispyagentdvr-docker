@@ -1,44 +1,15 @@
-# Use Ubuntu LTS
-FROM ubuntu:22.04
-
-# Define download location variables
-
-ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_4_4_9_0.zip"
-
-
-ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
-ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocation4?platform=Linux64&fromVersion=0"
-ARG DEBIAN_FRONTEND=noninteractive 
-ARG TZ=America/Los_Angeles
-ARG name
-    
+# Use latest ubuntu version with ffmpeg5
+FROM ubuntu:22.10
 
 # Download and install dependencies
 RUN apt-get update \
     && apt-get install -y wget unzip software-properties-common alsa-utils
 
-# Download/Install iSpy Agent DVR: 
-# Check if we were given a specific version
-RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
-    echo "Downloading from specific location: ${FILE_LOCATION}" && \
-    wget -c ${FILE_LOCATION} -O agent.zip; \
-    else \
-    #Get latest instead
-    echo "Downloading latest" && \
-    wget -c $(wget -qO- "https://www.ispyconnect.com/api/Agent/DownloadLocation4?platform=Linux64&fromVersion=0" | tr -d '"') -O agent.zip; \
-    fi && \
-    unzip agent.zip -d /agent && \
-    rm agent.zip
-    
 # Install libgdiplus, used for smart detection
 RUN apt-get install -y libgdiplus
 
 # Install ffmpeg
-RUN add-apt-repository -y ppa:savoury1/ffmpeg4 && \
-	add-apt-repository -y ppa:savoury1/ffmpeg5 && \
-	apt-get update && \
-	apt-get upgrade -y && \
-	apt-get install -y ffmpeg
+RUN apt-get install -y ffmpeg
     
 # Install Time Zone
 RUN apt-get install -y tzdata
@@ -46,6 +17,36 @@ RUN apt-get install -y tzdata
 # Install curl, used for calling external webservices in Commands
 RUN apt-get install -y curl
 
+
+#Define download location variables
+ENV FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_4_4_9_0.zip"
+ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
+ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocation4?platform=Linux64&fromVersion=0"
+ARG DEBIAN_FRONTEND=noninteractive
+ARG TZ=America/Los_Angeles
+ARG name
+
+# Download/Install iSpy Agent DVR: 
+# Detect the arch
+RUN arch=$(dpkg --print-architecture) && \
+   echo "Adjusting architecture to $arch" && \
+   if [ "$arch" = "arm64" ]; then \
+      DEFAULT_FILE_LOCATION=$(echo ${DEFAULT_FILE_LOCATION} | sed -e 's/Linux64/LinuxARM64/'); \
+      FILE_LOCATION=$(echo ${FILE_LOCATION} | sed -e 's/Linux64/LinuxARM64/'); \
+   fi &&\
+   # Check if we were given a specific version
+   if [ "${FILE_LOCATION_SET}" = "true" ]; then \
+      echo "Downloading from specific location: ${FILE_LOCATION}" && \
+      wget -c ${FILE_LOCATION} -O agent.zip; \
+    else \
+      #Get latest instead
+      arch=$(dpkg --print-architecture) && \
+      echo "Downloading latest" && \
+      wget -c $(wget -qO- ${DEFAULT_FILE_LOCATION} | tr -d '"') -O agent.zip; \
+    fi && \
+    unzip agent.zip -d /agent && \
+    rm agent.zip
+    
 # Clean up
 RUN apt-get -y --purge remove unzip wget \ 
     && apt autoremove -y \
