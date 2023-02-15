@@ -19,7 +19,7 @@ RUN apt-get install -y curl
 
 
 #Define download location variables
-ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_4_4_9_0.zip"
+ENV FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_4_4_9_0.zip"
 ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
 ENV DEFAULT_FILE_LOCATION="https://www.ispyconnect.com/api/Agent/DownloadLocation4?platform=Linux64&fromVersion=0"
 ARG DEBIAN_FRONTEND=noninteractive
@@ -27,17 +27,20 @@ ARG TZ=America/Los_Angeles
 ARG name
 
 # Download/Install iSpy Agent DVR: 
-# Check if we were given a specific version
-RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
+# Detect the arch
+RUN arch=$(dpkg --print-architecture) && \
+   echo "Adjusting architecture to $arch" && \
+   if [ "$arch" = "arm64" ]; then \
+      DEFAULT_FILE_LOCATION=$(echo ${DEFAULT_FILE_LOCATION} | sed -e 's/Linux64/LinuxARM64/'); \
+      FILE_LOCATION=$(echo ${FILE_LOCATION} | sed -e 's/Linux64/LinuxARM64/'); \
+   fi &&\
+   # Check if we were given a specific version
+   if [ "${FILE_LOCATION_SET}" = "true" ]; then \
       echo "Downloading from specific location: ${FILE_LOCATION}" && \
       wget -c ${FILE_LOCATION} -O agent.zip; \
     else \
       #Get latest instead
       arch=$(dpkg --print-architecture) && \
-      echo "Adjusting architecture to $arch" && \
-      if [ "$arch" = "arm64" ]; then \
-    	DEFAULT_FILE_LOCATION=$(echo ${DEFAULT_FILE_LOCATION} | sed -e 's/Linux64/LinuxARM64/'); \
-      fi && \
       echo "Downloading latest" && \
       wget -c $(wget -qO- ${DEFAULT_FILE_LOCATION} | tr -d '"') -O agent.zip; \
     fi && \
