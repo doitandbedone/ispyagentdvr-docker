@@ -21,17 +21,17 @@ jobs:
       DOCKERHUB_IMAGE: doitandbedone/ispyagentdvr
     steps:
       - name: Check out repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         
       - name: Log into Docker Hub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{secrets.DOCKERHUB_USERNAME}}
           password: ${{secrets.DOCKERHUB_TOKEN}}
       
       - name: Extract metadata (tags, labels) for Docker for non-latest
         id: meta-non-latest
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           flavor: |
             latest=false
@@ -42,13 +42,13 @@ jobs:
           
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           images: doitandbedone/ispyagentdvr
           
       - name: Build and push Docker image for tags
         if: startsWith(github.ref, 'refs/tags/')
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v4
         with:
           context: .
           push: ${{ github.event_name == 'push' }}
@@ -57,7 +57,7 @@ jobs:
           
       - name: Build and push Docker image for master
         if: contains(github.ref, 'refs/heads/master')
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v4
         with:
           context: .
           push: ${{ github.event_name == 'push' }}
@@ -66,7 +66,7 @@ jobs:
           
       - name: Build and push Docker image for vlc
         if: contains(github.ref, 'refs/heads/vlc-support')
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v4
         with:
           context: .
           push: ${{ github.event_name == 'push' }}
