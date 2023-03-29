@@ -3,7 +3,7 @@ FROM ubuntu:22.04
 
 # Define download location variables
 
-ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_4_6_0_0.zip"
+ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_4_6_4_0.zip"
 
 
 ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
@@ -34,11 +34,21 @@ RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
 RUN apt-get install -y libgdiplus
 
 # Install ffmpeg
-RUN add-apt-repository -y ppa:savoury1/ffmpeg4 && \
-	add-apt-repository -y ppa:savoury1/ffmpeg5 && \
-	apt-get update && \
-	apt-get upgrade -y && \
-	apt-get install -y ffmpeg
+RUN apt-get install -y build-essential xz-utils yasm cmake libtool libc6 libc6-dev pkg-config libx264-dev libx265-dev libmp3lame-dev libopus-dev libvorbis-dev libfdk-aac-dev libvpx-dev
+
+RUN wget https://ffmpeg.org/releases/ffmpeg-5.1.2.tar.gz &&\
+tar xf ffmpeg-5.1.2.tar.gz &&\
+cd ffmpeg-5.1.2 && \
+./configure --disable-debug \
+ --disable-doc \
+ --enable-shared \
+ --enable-pthreads \
+ --enable-hwaccels \
+ --enable-hardcoded-tables \
+ --enable-nonfree --disable-static --enable-shared --enable-gpl --enable-libx264 --enable-libmp3lame --enable-libopus --enable-libvorbis --enable-libfdk-aac --enable-libx265 --enable-libvpx &&\
+ make -j 8 && \
+ make install && \
+ cd ..
     
 # Install Time Zone
 RUN apt-get install -y tzdata
@@ -47,7 +57,7 @@ RUN apt-get install -y tzdata
 RUN apt-get install -y curl
 
 # Clean up
-RUN apt-get -y --purge remove unzip wget \ 
+RUN apt-get -y --purge remove unzip wget build-essential \ 
     && apt autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
