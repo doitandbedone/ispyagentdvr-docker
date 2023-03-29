@@ -57,7 +57,7 @@ RUN apt-get install -y tzdata
 RUN apt-get install -y curl
 
 # Clean up
-RUN apt-get -y --purge remove unzip wget build-essential xz-utils yasm cmake libtool libc6 libc6-dev unzip pkg-config libx264-dev libx265-dev libmp3lame-dev libopus-dev libvorbis-dev libfdk-aac-dev libvpx-dev \ 
+RUN apt-get -y --purge remove unzip wget build-essential \ 
     && apt autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
