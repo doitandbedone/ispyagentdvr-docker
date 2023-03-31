@@ -34,7 +34,7 @@ RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
 RUN apt-get install -y libgdiplus
 
 # Install ffmpeg
-RUN apt-get install -y build-essential xz-utils yasm cmake libtool libc6 libc6-dev pkg-config libx264-dev libx265-dev libmp3lame-dev libopus-dev libvorbis-dev libfdk-aac-dev libvpx-dev
+RUN apt-get install -y build-essential xz-utils yasm cmake libtool libc6 libc6-dev pkg-config libx264-dev libx265-dev libmp3lame-dev libopus-dev libvorbis-dev libfdk-aac-dev libvpx-dev libva-dev
 
 RUN wget https://ffmpeg.org/releases/ffmpeg-5.1.2.tar.gz &&\
 tar xf ffmpeg-5.1.2.tar.gz &&\
@@ -45,7 +45,8 @@ cd ffmpeg-5.1.2 && \
  --enable-pthreads \
  --enable-hwaccels \
  --enable-hardcoded-tables \
- --enable-nonfree --disable-static --enable-shared --enable-gpl --enable-libx264 --enable-libmp3lame --enable-libopus --enable-libvorbis --enable-libfdk-aac --enable-libx265 --enable-libvpx &&\
+ --enable-vaapi \
+ --enable-nonfree --disable-static --enable-gpl --enable-libx264 --enable-libmp3lame --enable-libopus --enable-libvorbis --enable-libfdk-aac --enable-libx265 --enable-libvpx &&\
  make -j 8 && \
  make install && \
  cd ..
