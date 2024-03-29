@@ -22,7 +22,7 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          gh pr create --title "Merge from master" --head doitandbedone:master --base doitandbedone:vlc-support
-          gh pr create --title "Merge from master" --head doitandbedone:master --base doitandbedone:feature/workflow-version-tagger
+          gh pr create --title "Merge from master" --body "Auto merge PR" --head doitandbedone:master --base doitandbedone:vlc-support
+          gh pr create --title "Merge from master" --body "Auto merge PR" --head doitandbedone:master --base doitandbedone:feature/workflow-version-tagger
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
