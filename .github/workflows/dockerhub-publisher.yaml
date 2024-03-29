@@ -6,6 +6,10 @@ on:
     branches:
       - master
       - vlc-support
+    paths:
+      - 'Dockerfile'
+      - 'LICENSE'
+      - 'README.md'
     tags:
       - '[0-9]+.[0-9]+.[0-9]+.[0-9]+'
   #Manual dispatch trigger

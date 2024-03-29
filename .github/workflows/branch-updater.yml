@@ -17,12 +17,12 @@ jobs:
     # This runs the job on ubuntu
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Creates pull requests
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          hub pull-request -m "Merge from master" -h doitandbedone:master -b doitandbedone:vlc-support
-          hub pull-request -m "Merge from master" -h doitandbedone:master -b doitandbedone:feature/workflow-version-tagger
+          gh pr create --title "Merge from master" --body "Auto merge PR" --head doitandbedone:master --base vlc-support
+          gh pr create --title "Merge from master" --body "Auto merge PR" --head doitandbedone:master --base feature/workflow-version-tagger
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
