@@ -3,7 +3,9 @@ FROM ubuntu:22.04
 
 # Define download location variables
 
-ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_5_3_3_0.zip"
+
+ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_5_3_4_0.zip"
+
 
 
 ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
@@ -38,9 +40,9 @@ RUN apt-get install -y build-essential xz-utils yasm cmake libtool libc6 libc6-d
  pkg-config libx264-dev libx265-dev libmp3lame-dev libopus-dev \
  libvorbis-dev libfdk-aac-dev libvpx-dev libva-dev
 
-RUN wget https://ffmpeg.org/releases/ffmpeg-5.1.2.tar.gz &&\
-tar xf ffmpeg-5.1.2.tar.gz &&\
-cd ffmpeg-5.1.2 && \
+RUN wget https://ffmpeg.org/releases/ffmpeg-6.1.1.tar.gz &&\
+tar xf ffmpeg-6.1.1.tar.gz &&\
+cd ffmpeg-6.1.1 && \
 ./configure --disable-debug \
  --disable-doc \
  --enable-shared \
