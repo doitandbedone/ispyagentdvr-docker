@@ -22,7 +22,7 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          gh pr create --title "Merge from master" --body "Auto merge PR" --head doitandbedone:master --base vlc-support
-          gh pr create --title "Merge from master" --body "Auto merge PR" --head doitandbedone:master --base feature/workflow-version-tagger
+          gh pr create --title "Merge master into vlc-support" --body "PR automatically created to keep branch up to date" --head doitandbedone:master --base vlc-support
+          gh pr create --title "Merge master into feature/workflow-version-tagger" --body "PR automatically created to keep branch up to date" --head doitandbedone:master --base feature/workflow-version-tagger
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
