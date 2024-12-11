@@ -79,7 +79,7 @@ EXPOSE 8090
 EXPOSE 3478/udp
 
 # TURN server UDP port range
-EXPOSE 50000-50010/udp
+EXPOSE 50000-50100/udp
 
 # Data volumes
 VOLUME ["/agent/Media/XML", "/agent/Media/WebServerRoot/Media", "/agent/Commands"]
