@@ -3,7 +3,7 @@ FROM ubuntu:22.04
 
 # Define download location variables
 
-ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_5_5_7_0.zip"
+ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_5_8_4_0.zip"
 
 
 ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
@@ -15,7 +15,7 @@ ARG name
 
 # Download and install dependencies
 RUN apt-get update \
-    && apt-get install -y wget unzip software-properties-common alsa-utils
+    && apt-get install -y wget unzip software-properties-common alsa-utils apt-transport-https libxext-dev fontconfig libva-drm2
 
 # Download/Install iSpy Agent DVR: 
 # Check if we were given a specific version
@@ -32,6 +32,7 @@ RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
     
 # Install libgdiplus, used for smart detection
 RUN apt-get install -y libgdiplus
+
 
 # VLC support
 RUN apt-get install -y libvlc-dev vlc libx11-dev
@@ -64,6 +65,7 @@ cd ffmpeg-6.1.1 && \
  make -j 8 && \
  make install && \
  cd ..
+
     
 # Install Time Zone
 RUN apt-get install -y tzdata
@@ -102,7 +104,7 @@ EXPOSE 8090
 EXPOSE 3478/udp
 
 # TURN server UDP port range
-EXPOSE 50000-50010/udp
+EXPOSE 50000-50100/udp
 
 # Data volumes
 VOLUME ["/agent/Media/XML", "/agent/Media/WebServerRoot/Media", "/agent/Commands"]
