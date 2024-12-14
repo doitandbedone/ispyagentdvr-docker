@@ -33,38 +33,11 @@ RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
 # Install libgdiplus, used for smart detection
 RUN apt-get install -y libgdiplus
 
-
-# VLC support
-RUN apt-get install -y libvlc-dev vlc libx11-dev
-
-# Install ffmpeg
-RUN apt-get install -y build-essential xz-utils yasm cmake libtool libc6 libc6-dev \
- pkg-config libx264-dev libx265-dev libmp3lame-dev libopus-dev \
- libvorbis-dev libfdk-aac-dev libvpx-dev libva-dev
-
-RUN wget https://ffmpeg.org/releases/ffmpeg-6.1.1.tar.gz &&\
-tar xf ffmpeg-6.1.1.tar.gz &&\
-cd ffmpeg-6.1.1 && \
-./configure --disable-debug \
- --disable-doc \
- --enable-shared \
- --enable-pthreads \
- --enable-hwaccels \
- --enable-hardcoded-tables \
- --enable-vaapi \
- --enable-nonfree \
- --disable-static \
- --enable-gpl \
- --enable-libx264 \
- --enable-libmp3lame \
- --enable-libopus \
- --enable-libvorbis \
- --enable-libfdk-aac \
- --enable-libx265 \
- --enable-libvpx && \
- make -j 8 && \
- make install && \
- cd ..
+# Ensure the target ffmpeg directory exists
+RUN mkdir -p /agent/ffmpeg6
+# Download and extract the archive to the specified directory
+RUN wget https://ispyrtcdata.blob.core.windows.net/downloads/ffmpeg6-linuxx64.tar.xz &&\
+    tar -xvf ffmpeg6-linuxx64.tar.xz --strip-components=1 -C "/agent/ffmpeg6"
 
     
 # Install Time Zone
