@@ -19,7 +19,7 @@ By default the container will use port 8090 for Web UI. To access the panel go t
 #### 3478
 Main port used for TURN server communication.
 
-#### 50000-50010
+#### 50000-50100
 Ports used to create connections or WebRTC. These will be used as needed.
 
 ### Volumes:
