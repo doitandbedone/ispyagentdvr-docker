@@ -19,7 +19,7 @@ By default the container will use port 8090 for Web UI. To access the panel go t
 #### 3478
 Main port used for TURN server communication.
 
-#### 50000-50010
+#### 50000-50100
 Ports used to create connections or WebRTC. These will be used as needed.
 
 ### Volumes:
@@ -38,7 +38,7 @@ mv /appdata/ispyagentdvr/video /appdata/ispyagentdvr/media
 
 ## Running Image :
 ```bash
-docker run -it -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp \
+docker run -it -p 8090:8090 -p 3478:3478/udp -p 50000-50100:50000-50100/udp \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
 -v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
 -v /appdata/ispyagentdvr/commands:/agent/Commands/ \
@@ -52,7 +52,7 @@ https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 #### latest:
 This tag will give you the latest version of the build.
 ```bash
-docker run -it -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp \
+docker run -it -p 8090:8090 -p 3478:3478/udp -p 50000-50100:50000-50100/udp \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
 -v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
 -v /appdata/ispyagentdvr/commands:/agent/Commands/ \
@@ -64,7 +64,7 @@ docker run -it -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp \
 Tags will also be created for older releases.
 For example, for version 2.7.6.0:
 ```bash
-docker run -it -p 8090:8090 -p 3478:3478/udp 50000-50010:50000-50010/udp \
+docker run -it -p 8090:8090 -p 3478:3478/udp 50000-50100:50000-50100/udp \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
 -v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
 -v /appdata/ispyagentdvr/commands:/agent/Commands/ \
@@ -79,7 +79,7 @@ To access UI panel go to the container's http://<container's ip>:<port> such as 
 ## VLC Support:
 Please use tag vlc:
 ```bash
-docker run -it -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp \
+docker run -it -p 8090:8090 -p 3478:3478/udp -p 50000-50100:50000-50100/udp \
 -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
 -v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
 -v /appdata/ispyagentdvr/commands:/agent/Commands/ \
