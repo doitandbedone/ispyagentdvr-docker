@@ -3,7 +3,9 @@ FROM ubuntu:22.04
 
 # Define download location variables
 
-ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_6_1_8_0.zip"
+
+ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_6_2_1_0.zip"
+
 
 
 ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
@@ -34,10 +36,10 @@ RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
 RUN apt-get install -y libgdiplus
 
 # Ensure the target ffmpeg directory exists
-RUN mkdir -p /agent/ffmpeg6
+RUN mkdir -p /agent/ffmpeg7
 # Download and extract the archive to the specified directory
-RUN wget https://ispyrtcdata.blob.core.windows.net/downloads/ffmpeg6-linuxx64.tar.xz &&\
-    tar -xvf ffmpeg6-linuxx64.tar.xz --strip-components=1 -C "/agent/ffmpeg6"
+RUN wget https://ispyrtcdata.blob.core.windows.net/downloads/ffmpeg7-linuxx64.tar.xz &&\
+    tar -xvf ffmpeg7-linuxx64.tar.xz --strip-components=1 -C "/agent/ffmpeg7"
 
     
 # Install Time Zone
