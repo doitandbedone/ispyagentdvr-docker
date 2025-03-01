@@ -34,10 +34,10 @@ RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
 RUN apt-get install -y libgdiplus
 
 # Ensure the target ffmpeg directory exists
-RUN mkdir -p /agent/ffmpeg6
+RUN mkdir -p /agent/ffmpeg7
 # Download and extract the archive to the specified directory
-RUN wget https://ispyrtcdata.blob.core.windows.net/downloads/ffmpeg6-linuxx64.tar.xz &&\
-    tar -xvf ffmpeg6-linuxx64.tar.xz --strip-components=1 -C "/agent/ffmpeg6"
+RUN wget https://ispyrtcdata.blob.core.windows.net/downloads/ffmpeg7-linuxx64.tar.xz &&\
+    tar -xvf ffmpeg7-linuxx64.tar.xz --strip-components=1 -C "/agent/ffmpeg7"
 
     
 # Install Time Zone
