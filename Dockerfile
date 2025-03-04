@@ -4,7 +4,7 @@ FROM ubuntu:22.04
 # Define download location variables
 
 
-ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_6_2_1_0.zip"
+ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_6_2_2_0.zip"
 
 
 
