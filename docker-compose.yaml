@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  agentdvr:
+    image: doitandbedone/ispyagentdvr:latest
+    restart: always
+    ports:
+      - "8090:8090"
+      - "3478:3478/udp"
+      - "50000-50010:50000-50010/udp"
+    devices:
+      - /dev/dri
+    volumes:
+      - "./config:/agent/Media/XML/"
+      - "./media:/agent/Media/WebServerRoot/Media/"
+      - "./commands:/agent/Commands/"
+    environment:
+      TZ: "Europe/Berlin"
