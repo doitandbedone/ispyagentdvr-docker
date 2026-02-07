@@ -3,7 +3,9 @@ FROM ubuntu:22.04
 
 # Define download location variables
 
-ARG FILE_LOCATION="https://ispyfiles.azureedge.net/downloads/Agent_Linux64_5_5_7_0.zip"
+
+ARG FILE_LOCATION="https://files.ispyconnect.com/downloads/Agent_Linux64_7_1_8_0.zip"
+
 
 
 ENV FILE_LOCATION_SET=${FILE_LOCATION:+true}
@@ -15,7 +17,7 @@ ARG name
 
 # Download and install dependencies
 RUN apt-get update \
-    && apt-get install -y wget unzip software-properties-common alsa-utils
+    && apt-get install -y wget unzip software-properties-common alsa-utils apt-transport-https libxext-dev fontconfig libva-drm2
 
 # Download/Install iSpy Agent DVR: 
 # Check if we were given a specific version
@@ -33,37 +35,12 @@ RUN if [ "${FILE_LOCATION_SET}" = "true" ]; then \
 # Install libgdiplus, used for smart detection
 RUN apt-get install -y libgdiplus
 
-# VLC support
-RUN apt-get install -y libvlc-dev vlc libx11-dev
+# Ensure the target ffmpeg directory exists
+RUN mkdir -p /agent/ffmpeg7
+# Download and extract the archive to the specified directory
+RUN wget https://ispyrtcdata.blob.core.windows.net/downloads/ffmpeg7-linuxx64.tar.xz &&\
+    tar -xvf ffmpeg7-linuxx64.tar.xz --strip-components=1 -C "/agent/ffmpeg7"
 
-# Install ffmpeg
-RUN apt-get install -y build-essential xz-utils yasm cmake libtool libc6 libc6-dev \
- pkg-config libx264-dev libx265-dev libmp3lame-dev libopus-dev \
- libvorbis-dev libfdk-aac-dev libvpx-dev libva-dev
-
-RUN wget https://ffmpeg.org/releases/ffmpeg-6.1.1.tar.gz &&\
-tar xf ffmpeg-6.1.1.tar.gz &&\
-cd ffmpeg-6.1.1 && \
-./configure --disable-debug \
- --disable-doc \
- --enable-shared \
- --enable-pthreads \
- --enable-hwaccels \
- --enable-hardcoded-tables \
- --enable-vaapi \
- --enable-nonfree \
- --disable-static \
- --enable-gpl \
- --enable-libx264 \
- --enable-libmp3lame \
- --enable-libopus \
- --enable-libvorbis \
- --enable-libfdk-aac \
- --enable-libx265 \
- --enable-libvpx && \
- make -j 8 && \
- make install && \
- cd ..
     
 # Install Time Zone
 RUN apt-get install -y tzdata
@@ -102,7 +79,7 @@ EXPOSE 8090
 EXPOSE 3478/udp
 
 # TURN server UDP port range
-EXPOSE 50000-50010/udp
+EXPOSE 50000-50100/udp
 
 # Data volumes
 VOLUME ["/agent/Media/XML", "/agent/Media/WebServerRoot/Media", "/agent/Commands"]
