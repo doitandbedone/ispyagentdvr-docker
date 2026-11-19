@@ -1,4 +1,9 @@
-# iSpy Agent DVR
+# Project Archived
+Thanks, everyone who followed this project. There is now an official image; please follow instructions from the official site: https://www.ispyconnect.com/
+
+-------
+
+## iSpy Agent DVR
 This is a docker image for Agent DVR from iSpy created for convenience. Please consider donating/sponsoring. While still in direct contact with iSpy, we still maintain this at our own time.
 The software creates a local server for IP cameras to be managed. For more information visit:
 https://www.ispyconnect.com/userguide-agent-dvr.aspx
